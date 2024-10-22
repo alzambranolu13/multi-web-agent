@@ -28,25 +28,19 @@ class MyGenericAgentArgs(GenericAgentArgs):
         super().__init__(chat_model_args=chat_model_args, flags=flags)
         max_retry: int = 4
     
-    def make_agent(self,system_prompt: dp.SystemPrompt, goal_prompt: GoalInstructions):
+    def make_agent(self):
         return MyGenericAgent(
-            chat_model_args=self.chat_model_args, flags=self.flags, max_retry=self.max_retry,system_prompt= system_prompt,goal_prompt=goal_prompt
+            chat_model_args=self.chat_model_args, flags=self.flags, max_retry=self.max_retry
         )
 
 
 class MyGenericAgent(GenericAgent):
-    def __init__(self,chat_model_args, flags, max_retry , system_prompt: dp.SystemPrompt, goal_prompt: GoalInstructions ):
+    def __init__(self,chat_model_args, flags, max_retry ):
         super().__init__(chat_model_args=chat_model_args, flags=flags, max_retry=max_retry )
-        self.system_prompt = system_prompt
-        self.goal_prompt = goal_prompt
-    
-    def set_goal(self,goal: str):
-        self.goal_prompt.add_goal(goal)
  
-    def get_action(self,obs, elements:str):
+    def get_action(self,obs, goal): 
         self.obs_history.append(obs)
-        goal = self.obs_history[-1]["goal"]   
-        self.set_goal(goal) 
+
         main_prompt = MyMainPrompt(
             action_set=self.action_set,
             obs_history=self.obs_history,
@@ -56,23 +50,13 @@ class MyGenericAgent(GenericAgent):
             previous_plan=self.plan,
             step=self.plan_step,
             flags=self.flags,
-            instructions= self.goal_prompt,
-            elements= elements   
+            goal = goal
         )
-        # main_prompt = MainPrompt(
-        #     action_set=self.action_set,
-        #     obs_history=self.obs_history,
-        #     actions=self.actions,
-        #     memories=self.memories,
-        #     thoughts=self.thoughts,
-        #     previous_plan=self.plan,
-        #     step=self.plan_step,
-        #     flags=self.flags,
-        # )
+
 
         max_prompt_tokens, max_trunc_itr = self._get_maxes()
 
-        system_prompt = self.system_prompt._prompt
+        system_prompt = dp.SystemPrompt().prompt
 
         prompt = dp.fit_tokens(
             shrinkable=main_prompt,

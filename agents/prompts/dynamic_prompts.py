@@ -15,10 +15,9 @@ class ObserverPrompt():
 
            
 class MyMainPrompt(MainPrompt):
-      def __init__(self, action_set: AbstractActionSet, obs_history: list[dict], actions: list[str], memories: list[str], thoughts: list[str], previous_plan: str, step: int, flags: GenericPromptFlags, instructions: GoalInstructions, elements: str):
+      def __init__(self, action_set: AbstractActionSet, obs_history: list[dict], actions: list[str], memories: list[str], thoughts: list[str], previous_plan: str, step: int, flags: GenericPromptFlags, goal: str):
         super().__init__(action_set, obs_history,actions,memories,thoughts,previous_plan,step,flags)
-        self.instructions = instructions
-        self.obs = ObserverPrompt(elements)
+        self.instructions = GoalInstructions(goal, extra_instructions=flags.extra_instructions)
 
       @property
       def _prompt(self) -> str:

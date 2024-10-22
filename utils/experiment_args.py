@@ -31,16 +31,12 @@ from browsergym.experiments.loop import _is_debugging, _save_summary_info, _send
 from agentlab.agents.agent_args import AgentArgs
 from browsergym.experiments.utils import count_messages_token, count_tokens
 
-from agents.prompts.prompts import ObsSystemPrompt,PlanSystemPrompt,DescSystemPrompt,ObsGoalInstructions, ContGoalInstructions
-
 
 @dataclass
 class MyExpArgs(loop.ExpArgs):
-    def __init__(self, obs_args: AgentArgs, plan_args: AgentArgs,des_args: AgentArgs, agent_args:AgentArgs, env_args: EnvArgs ):
+    def __init__(self, plan_args: AgentArgs, agent_args:AgentArgs,  env_args: EnvArgs ):
         super().__init__(agent_args=agent_args, env_args=env_args)
-        self.obs_args= obs_args
         self.plan_arg= plan_args
-        self.des_args= des_args
 
     def run(self):
         """Run the experiment and save the results"""
@@ -55,8 +51,6 @@ class MyExpArgs(loop.ExpArgs):
         env, step_info, err_msg, stack_trace = None, None, None, None
         try:
             logger.info(f"Running experiment {self.exp_name} in:\n  {self.exp_dir}")
-            #agent = self.agent_args.make_agent(DescSystemPrompt(),ContGoalInstructions())
-            observer = self.obs_args.make_agent()
             planner = self.plan_arg.make_agent()
             agent = self.agent_args.make_agent()
             logger.debug(f"Agents created.")
@@ -71,46 +65,44 @@ class MyExpArgs(loop.ExpArgs):
                 env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
             )
             logger.debug(f"Environment reset.")
-            last_action = None
-            previous_plan = None
-            while not step_info.is_done:  # set a limit
-                logger.debug(f"Starting step {step_info.step}.")                
-                #action_planner = planner.get_action(PlanSystemPrompt,step_info.obs.copy())
-                goal = step_info.obs["goal"]
-                elements = observer.get_action(step_info.obs.copy())
-                plan = planner.get_action(elements,goal,last_action,previous_plan)
-                previous_plan = plan
-                last_action = plan[0]
-                #goal = step_info.obs['goal']
-                action, agent_info = agent.get_action(last_action)
+            steps_completed= []
+            goal_reach= False
+            while not(goal_reach):
+                logger.debug(f"Starting step {step_info.step}.")
+                #action = step_info.from_action(agent)
                 step_info.profiling.agent_start = time.time()
-                #action, agent_info = agent.get_action(step_info.obs.copy(),elements)
-                step_info.action, step_info.agent_info = action,agent_info
-                step_info.profiling.agent_stop = time.time()
-
-                step_info.make_stats()
-
-                #action = step_info.from_action(agent,elements)
-                logger.debug(f"Agent chose action:\n {action}")
-
-                if action is None:
-                    step_info.truncated = True
-
-                step_info.save_step_info(self.exp_dir)
-                logger.debug(f"Step info saved.")
-
-                _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
-                logger.debug(f"Chat info sent.")
-                step_info = StepInfo(step=step_info.step + 1)
-                episode_info.append(step_info)
-
-                if action is None:
-                    logger.debug(f"Agent returned None action. Ending episode.")
+                plan = planner.get_action(step_info.obs.copy(),steps_completed)
+                is_done= False
+                if len(plan)==0:
                     break
+                while not is_done and len(plan)!=0 :  # set a limit    
+                    action, agent_info = agent.get_action(step_info.obs.copy(), plan[0])
+                    step_info.action, step_info.agent_info = action,agent_info
+                    step_info.profiling.agent_stop = time.time()
+                    logger.debug(f"Agent chose action:\n {action}")
 
-                logger.debug(f"Sending action to environment.")
-                step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
-                logger.debug(f"Environment stepped.")
+                    if action is None:
+                        step_info.truncated = True
+
+                    step_info.save_step_info(self.exp_dir)
+                    logger.debug(f"Step info saved.")
+                    if "Done" in action or "done" in action :
+                        is_done= True
+                        continue
+                    _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
+                    logger.debug(f"Chat info sent.")
+
+                    step_info = StepInfo(step=step_info.step + 1)
+                    episode_info.append(step_info)
+
+                    if action is None:
+                        logger.debug(f"Agent returned None action. Ending episode.")
+                        break
+
+                    logger.debug(f"Sending action to environment.")
+                    step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
+                    logger.debug(f"Environment stepped.")
+                steps_completed.append(plan[0])
 
         except Exception as e:
             err_msg = f"Exception uncaught by agent or environment in task {self.env_args.task_name}.\n{type(e).__name__}:\n{e}"

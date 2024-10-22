@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass
 from browsergym.core.action.base import AbstractActionSet
 from agentlab.agents.dynamic_prompting import ActionFlags, ActionPrompt, Observation, ObsFlags, fit_tokens
 import re
+from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url
 
 if TYPE_CHECKING:
     from agentlab.llm.chat_api import BaseModelArgs
@@ -34,13 +35,14 @@ class ObserverAgent(MostBasicAgent):
     def __init__(self, temperature: float, use_chain_of_thought: bool, chat_model_args: "BaseModelArgs"):
         super().__init__(temperature, use_chain_of_thought, chat_model_args)
 
-    def get_action(self, obs: Any) -> tuple[str, dict]:
+    def get_action(self, obs: Any, feedback) -> tuple[str, dict]:
         #obs.shrink()
         obs = Observation(obs,ObsFlags())
         obs_prompt = fit_tokens(obs,100000)
         system_prompt = f"""
 You are part of a collection of Web Agents which goal is to help the user perform tasks using a web browser. 
-Your task as the Observer Agent is to provide the relevant elements presented in the current page to our Planner Agent.
+Your task as the Observer Agent is to provide the relevant elements presented in the current page to our Planner Agent. 
+There's a Big Brother agent which will supervise your answers please take into account it's feedback.
 """
         prompt = f"""
 Review the current state of the page and retrieve the top elements sorted by relevance.
@@ -58,6 +60,7 @@ Your answer will be interpreted and executed by a program, MAKE SURE to follow t
 The user's goal is: {obs.obs['goal']}
 
 {obs_prompt}
+
 
 """
 
@@ -99,55 +102,125 @@ class PlannerAgent(MostBasicAgent):
     def __init__(self, temperature: float, use_chain_of_thought: bool, chat_model_args: "BaseModelArgs"):
         super().__init__(temperature, use_chain_of_thought, chat_model_args)
 
-    def get_action(self, elements:str, goal:str, last_step: str, previous_plan:str) -> tuple[str, dict]:
+    def add_screenshot(self, prompt, screenshot):
+        if isinstance(prompt, str):
+            prompt = [{"type": "text", "text": prompt}]
+
+        img_url = image_to_jpg_base64_url(screenshot)
+        prompt.append(
+            {
+                "type": "image_url",
+                "image_url": {"url": img_url, "detail": "auto"},
+            }
+        )
+        return prompt
+
+    def get_action(self, obs: dict, last_steps: str) -> tuple[str, dict]:
 
         system_prompt = f"""
 You are part of a collection of Web Agents which goal is to help the user perform tasks using a web browser. Your tasks 
-as the Planner is to figure out the different steps required to complete a certain goal. You have information about the observed elements 
-in the page, given to you by the Observer (which is another agent of the collection),past actions, chat messages and feedback from 
-the Controller agent (which is another agent of the collection). 
+as the Planner is to figure out the different steps required to complete a certain goal. You have a screenshot of the state of the page as well as the steps executed and feedback from the Controller agent (which executes the actions).
 """
+#There's a Big Brother agent which will supervise your answers please take into account it's feedback.        
         
 
 
         prompt = f"""
-Based on the elements provided by the pbserver provide a multi step plan that will guide you to accomplish the goal. There
-should always be steps to verify if the previous action had an effect. The plan
-can be revisited at each steps. Specifically, if there was something unexpected.
-The plan should be cautious and favor exploring befor submitting.
+Based on the screenshot create a very highlevel plan with intermediate subgoals to achieve the user's goal. Provide a chain of thought/reasoning to your answer.
 
-Your answer have to follow a list format like the following "step_number. instruction, bid [##]":
+Here are some examples of what is your expected behavior:
 
-1.click search bar, bid [94]
-2.type "lorem ipsum", bid [94]
-3.click on first link, bid [220]
+-Example 0
+If the goal is "Open New York Times page" \n
 
-You just executed step {last_step} of the previously proposed plan:\n{previous_plan}\n
-After reviewing the effect of your previous actions, verify if your plan is still
-relevant and update it if necessary, make sure to NOT repeat the last action.
-If goal has been reached return done.
+Your answer should be:
+<plan>
+1. Open New York Times page
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
 
-The user's goal is: {goal}
+-Example 1
 
-The Observer agent found this list  of elements the  most relevant to achieve the user's goal, base your actions on these elements:
-{elements}
+If the goal is "Find a silver Rolex for men priced between $13,000 and $15,000 on eBay"
+
+Your answer should be:
+<plan>
+1. Open the eBay website.
+2. Search for men’s watches.
+3. Filter results by the Rolex brand.
+4. Apply color filter to grey
+5. Apply price filter from 13,000 to 15,000
+6. Pick first watch that appears after filtering 
+5. Provide the results to the user
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+
+-Example 2
+
+If the goal is "Retrieve the second section of the first article related to 'Trading for beginners' on Investopedia"
+
+Your answer should be:
+<plan>
+1. Open the Investopedia website.
+2. Search for articles on ”Trading for beginners.”
+3. Review the first three articles.
+4. Open the first article.
+5. Retrieve and provide the content of the second section to user.
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+
+
+-Example 3
+If the goal is "Get me the amount of views in the most trending video right now on Youtube"
+
+Your answer should be:
+<plan>
+1. Open Youtube
+2. Click on Trending
+3. Rertrieve the total number of views in the first video
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+
+
+End of examples.
+
+The user's goal is: {obs['goal']}
+
+You have executed succesfully the following actions: {last_steps}
+
+And you hou have the screenshot of the current state of the page. Provide the plan
+
+If the goal is complete please return an empty plan.
+
 """   
+        prompt = self.add_screenshot(prompt, obs['screenshot'])
 
         messages = [SystemMessage(content=system_prompt), HumanMessage(content=prompt)]
 
         def parser(response: str) -> tuple[dict, bool, str]:
-            pattern = re.compile(r"[0-9]\..*\n")
-            blocks = pattern.findall(response)
+            blocks= parse_html_tags_raise(response, keys=('plan','thought'))
             if len(blocks) == 0:
                 raise ParseError("No code block found in the response")
-            elements= [block.split('. ')[1] for block in blocks]
-            return {"elements": elements}
+            pattern = re.compile(r"[0-9]\..*\n")
+            steps = pattern.findall(blocks['plan'])
+            if len(steps)== 0:
+                pattern = re.compile(r"[0-9]\..*.")
+                steps = pattern.findall(blocks['plan'])
+            steps = [step.split('.')[1] for step in steps]
+            answer= {'steps':steps, 'thought': blocks['thought']}
+            return answer
 
         ans_dict = retry_raise(self.chat, messages, n_retry=3, parser=parser)
 
-        elements = ans_dict.get("elements", None)
-
-        return elements
+        return ans_dict.get('steps',0)
     
 class ContAgentArg(MostBasicAgentArgs):
     agent_name: str = "BasicAgent"
@@ -177,6 +250,7 @@ class ControllerAgent(MostBasicAgent):
         system_prompt = f"""
 You are part of a collection of Web Agents which goal is to help the user perform tasks using a web browser. Your tasks 
 as the Controller is to execute the last order from the planner picking from a set of actions you can execute.
+There's a Big Brother agent which will supervise your answers please take into account it's feedback.
 """
         prompt = f"""
 You can interact with the environment using the following actions:
@@ -192,6 +266,7 @@ click('a314')
 ```
 
 Here is the order given by the Planner: {action}
+
 """   
 
         messages = [SystemMessage(content=system_prompt), HumanMessage(content=prompt)]
@@ -218,4 +293,90 @@ Here is the order given by the Planner: {action}
                 extra_info={"chat_model_args": asdict(self.chat_model_args)},
             ),
         )
+    
+
+class BrotherAgentArg(MostBasicAgentArgs):
+    agent_name: str = "BasicAgent"
+    temperature: float = 0.1
+    use_chain_of_thought: bool = True
+    chat_model_args: "BaseModelArgs" = None
+
+    def make_agent(self) -> Agent:
+        return BrotherAgent(
+            temperature=self.temperature,
+            use_chain_of_thought=self.use_chain_of_thought,
+            chat_model_args=self.chat_model_args,
+        )
+
+    def prepare(self):
+        return self.chat_model_args.prepare_server()
+
+    def close(self):
+        return self.chat_model_args.close_server()
+    
+class BrotherAgent(MostBasicAgent):
+    def __init__(self, temperature: float, use_chain_of_thought: bool, chat_model_args: "BaseModelArgs"):
+        super().__init__(temperature, use_chain_of_thought, chat_model_args)
+
+    def add_screenshot(self, prompt, screenshot):
+        if isinstance(prompt, str):
+            prompt = [{"type": "text", "text": prompt}]
+
+        img_url = image_to_jpg_base64_url(screenshot)
+        prompt.append(
+            {
+                "type": "image_url",
+                "image_url": {"url": img_url, "detail": "auto"},
+            }
+        )
+        return prompt
+
+    def get_action(self, obs_before, obs_after, action) -> tuple[str, dict]:
+        #observation = Observation(obs,ObsFlags())
+        #obs_prompt = fit_tokens(observation,100000)
+        system_prompt = f"""
+You are part of a collection of Web Agents which goal is to help the user perform tasks using a web browser. Your task
+as the Big Brother Agent is to supervise that the actions taken are correct and that they contribute in achieving the goal.
+"""
+            
+        prompt1 = f"""
+Compare the before and after state of the page to ensure if the action expected was executed correctly. Give a chain of thought of your judgement.
+"""   
+
+        prompt2 = self.add_screenshot("This screenshot is before the action was executed",obs_before['screenshot'])
+
+        prompt3 =self.add_screenshot("This screenshot is after the action was executed",obs_after['screenshot'])
+        #prompt.append(self.add_screenshot("This screenshot is after the actions",obs_after['screenshot']))
+
+        prompt4=f"""
+The action taken by the Controller was {action}
+
+Give your answer in the following format:
+<feedback>
+Feedback about the action taken by the controller
+</feedback>
+
+<thought>
+Your chain of thought or reasoning
+</thought>
+
+"""  
+
+        
+
+        messages = [SystemMessage(content=system_prompt), HumanMessage(content=prompt1), HumanMessage(content=prompt2),HumanMessage(content=prompt3), HumanMessage(content=prompt4) ]
+
+        #messages = [SystemMessage(content=system_prompt), HumanMessage(content=prompt2) ]
+
+        def parser(response: str) -> tuple[dict, bool, str]:
+            blocks= parse_html_tags_raise(response, keys=('feedback','thought'))
+            if len(blocks) == 0:
+                raise ParseError("No code block found in the response")
+            return blocks
+
+        ans_dict = retry_raise(self.chat, messages, n_retry=3, parser=parser)
+
+        return ans_dict
+
+        
     
