@@ -28,6 +28,13 @@ class MyGenericAgentArgs(GenericAgentArgs):
         super().__init__(chat_model_args=chat_model_args, flags=flags)
         max_retry: int = 4
     
+    def __post_init__(self):
+        self.agent_type = "PlannerController" # change to PlannerController, CPO, etc.
+        try:  # some attributes might be temporarily args.CrossProd for hyperparameter generation
+            self.agent_name = f"{self.agent_type}-{self.chat_model_args.model_name}".replace("/", "_")
+        except AttributeError:
+            pass
+    
     def make_agent(self):
         return MyGenericAgent(
             chat_model_args=self.chat_model_args, flags=self.flags, max_retry=self.max_retry

@@ -80,7 +80,7 @@ The user's goal is: {obs.obs['goal']}
         return elements
         
 class PlannerAgentArg(MostBasicAgentArgs):
-    agent_name: str = "BasicAgent"
+    agent_name: str = "PlannerAgent"
     temperature: float = 0.2
     use_chain_of_thought: bool = False
     chat_model_args: "BaseModelArgs" = None
@@ -215,12 +215,12 @@ If the goal is complete please return an empty plan.
                 pattern = re.compile(r"[0-9]\..*.")
                 steps = pattern.findall(blocks['plan'])
             steps = [step.split('.')[1] for step in steps]
-            answer= {'steps':steps, 'thought': blocks['thought']}
+            answer= {'steps':steps, 'thought': blocks['thought'], "response_raw": response}
             return answer
 
         ans_dict = retry_raise(self.chat, messages, n_retry=3, parser=parser)
 
-        return ans_dict.get('steps',0)
+        return ans_dict
     
 class ContAgentArg(MostBasicAgentArgs):
     agent_name: str = "BasicAgent"

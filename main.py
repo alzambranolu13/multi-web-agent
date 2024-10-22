@@ -1,7 +1,7 @@
 import argparse
 
 from browsergym.experiments.loop import EnvArgs
-from utils.experiment_args import MyExpArgs
+from utils.experiment_args_base import MultiAgentExpArgsBase
 
 from agentlab.agents.agent_args import AgentArgs
 from agentlab.experiments.exp_utils import RESULTS_DIR
@@ -19,7 +19,7 @@ def make_exp_args(plan_args: AgentArgs,agent_args: AgentArgs, start_url="https:/
     except AttributeError:
         pass
 
-    exp_args = MyExpArgs(
+    exp_args = MultiAgentExpArgsBase(
         plan_args= plan_args,
         agent_args= agent_args,
         env_args=EnvArgs(
