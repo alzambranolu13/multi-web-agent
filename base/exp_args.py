@@ -34,12 +34,18 @@ from browsergym.experiments.utils import count_messages_token, count_tokens
 
 @dataclass
 class MultiAgentExpArgsBase(loop.ExpArgs):
-    def __init__(self, plan_args: AgentArgs, agent_args:AgentArgs,  env_args: EnvArgs ):
+    def __init__(self, agent_args:AgentArgs,  env_args: EnvArgs ):
         super().__init__(agent_args=agent_args, env_args=env_args)
-        self.plan_arg= plan_args
         self.step_limit=20
-    def _multi_agent_step(self):  # TODO: add relevant args
+
+    @abstractmethod
+    def _multi_agent_step(self, env, episode_info):  
         pass
+
+    @abstractmethod
+    def _makes_agents(self):
+        pass
+
 
     def run(self):
         """Run the experiment and save the results"""
@@ -54,8 +60,7 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
         env, step_info, err_msg, stack_trace = None, None, None, None
         try:
             logger.info(f"Running experiment {self.exp_name} in:\n  {self.exp_dir}")
-            planner = self.plan_arg.make_agent()
-            agent = self.agent_args.make_agent()
+            agent = self._makes_agents()
             logger.debug(f"Agents created.")
             env = self.env_args.make_env(
                 action_mapping=agent.action_set.to_python_code, exp_dir=self.exp_dir
@@ -69,57 +74,51 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             )
             logger.debug(f"Environment reset.")
             steps_completed= []
-            goal_reach= False
-            while not(goal_reach):
-                logger.debug(f"Starting step {step_info.step}.")
-                #action = step_info.from_action(agent)
-                step_info.profiling.agent_start = time.time()
-                planner_ans_dict = planner.get_action(step_info.obs.copy(),steps_completed)
-                plan = planner_ans_dict['steps']
-                # TODO: save planner_ans_dict as planner_step_answer.json inside self.exp_dir
-                with open(self.exp_dir / "planner_answer.json", "w") as f:
-                    json.dump(plan, f, indent=4, cls=DataclassJSONEncoder)
-                is_done= False
-                if len(plan)==0:
-                    break
-                # change this while loop into a function called self._multi_agent_step()
-                num_steps = 0
-                while not is_done and len(plan)!=0 :  # set a limit  
-                    if num_steps > self.step_limit :
+            steps_failed=[]
+            is_done = False
+            max_retries=10
+            while not step_info.is_done:
+                goal = self._multi_agent_step(step_info,steps_completed,steps_failed)
+                retries= 0
+                while True:
+                    if (retries>= max_retries):
                         break
-                    action, agent_info = agent.get_action(step_info.obs.copy(), plan[0])
-                    step_info.action, step_info.agent_info = action,agent_info
-                    step_info.profiling.agent_stop = time.time()
+                    agent.set_goal(goal)
+                    action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
 
                     if action is None:
+                        # will end the episode after saving the step info.
                         step_info.truncated = True
+                        break
+
+                    if "Done" in action or "done" in action:
+                        is_done= True
+                        break
 
                     step_info.save_step_info(self.exp_dir)
                     logger.debug(f"Step info saved.")
-                    if "Done" in action or "done" in action :
-                        is_done= True
-                        break
+
                     _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
                     logger.debug(f"Chat info sent.")
-
-                    step_info = StepInfo(step=step_info.step + 1)
-                    episode_info.append(step_info)
 
                     if action is None:
                         logger.debug(f"Agent returned None action. Ending episode.")
                         break
 
+                    step_info = StepInfo(step=step_info.step + 1)
+                    episode_info.append(step_info)
+
                     logger.debug(f"Sending action to environment.")
                     step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
                     logger.debug(f"Environment stepped.")
-                    num_steps+=1
-                
-                
-                steps_completed.append(plan[0])
+                    retries+=1
+                if is_done == True:
+                    steps_completed.append(goal)
+                else:
+                    steps_failed.append(goal)
 
-                # _multi_agent_step ends here
-
+            
         except Exception as e:
             err_msg = f"Exception uncaught by agent or environment in task {self.env_args.task_name}.\n{type(e).__name__}:\n{e}"
             stack_trace = traceback.format_exc()

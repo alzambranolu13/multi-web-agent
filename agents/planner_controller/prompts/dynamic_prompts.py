@@ -1,17 +1,7 @@
 
 from browsergym.core.action.base import AbstractActionSet
 from agentlab.agents.generic_agent.generic_agent_prompt import MainPrompt, GenericPromptFlags
-from agents.prompts.prompts import UniversalGoalInstructions
 from agentlab.agents.dynamic_prompting import SystemPrompt, GoalInstructions
-
-
-class ObserverPrompt():
-    def __init__(self, obs: str) -> None:
-        self.prompt= f"""
-#The Observer agent found this list  of elements the  most relevant to achieve the user's goal
-{obs}
-"""
-
 
            
 class MyMainPrompt(MainPrompt):
