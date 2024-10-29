@@ -16,7 +16,8 @@ Next, we need to install agentlab from the repository. we are using a stable for
 ```bash
 # assuming you are in /path/to/multi-web-agent
 cd ..
-git clone https://github.com/alzambranolu13/AgentLab
+git clone https://github.com/alzambranolu13/AgentLab  #
+#hash 695f7e648d2c1fb79ffe85f2dc26cf015ac1dbbb
 cd AgentLab/
 git checkout stable
 

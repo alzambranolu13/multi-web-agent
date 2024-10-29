@@ -37,6 +37,7 @@ FLAGS_GPT_4o = GenericPromptFlags(
         action_set="bid",
         long_description=False,
         individual_examples=False,
+        demo_mode = "default"
     ),
     use_plan=False,
     use_criticise=False,

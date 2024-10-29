@@ -7,7 +7,7 @@ from .agent_args import ControllerAgentArgs,PlannerAgentArg
 
 
 
-PLAN_AGENT = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-2024-05-13"])
+PLAN_AGENT = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
 
 FLAGS_GPT_4o = GenericPromptFlags(
     obs=dp.ObsFlags(
@@ -22,17 +22,18 @@ FLAGS_GPT_4o = GenericPromptFlags(
         use_diff=False,
         html_type="pruned_html",
         use_screenshot=True,
-        use_som=True,
+        use_som=False,
         extract_visible_tag=True,
         extract_clickable_tag=True,
         extract_coords="False",
-        filter_visible_elements_only=False,
+        filter_visible_elements_only=True,
     ),
     action=dp.ActionFlags(
         multi_actions=False,
         action_set="bid",
         long_description=False,
         individual_examples=False,
+        demo_mode = "default"
     ),
     use_plan=False,
     use_criticise=False,
@@ -44,10 +45,10 @@ FLAGS_GPT_4o = GenericPromptFlags(
     enable_chat=False,
     max_prompt_tokens=None,
     be_cautious=True,
-    extra_instructions="Please follow specific goal.After you think the goal is completed please send the user a done message, no need to re-verify",
+    extra_instructions="The first and most essential thing is to check if the goal has been achieved. After you think the goal is completed please send the user a done message, no need to re-verify",
 )
 
 CONTROLLER_AGENT = ControllerAgentArgs(
-    chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-2024-05-13"],
+    chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"],
     flags=FLAGS_GPT_4o,
 )

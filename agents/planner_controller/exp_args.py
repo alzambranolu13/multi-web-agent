@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 
 from base.exp_args import MultiAgentExpArgsBase
@@ -8,8 +9,8 @@ from browsergym.experiments.loop import _send_chat_info, DataclassJSONEncoder,lo
 from browsergym.experiments.loop import EnvArgs
 
 class MultiAgentExpArgsCP(MultiAgentExpArgsBase):
-    def __init__(self,agents_dict:dict,  env_args: EnvArgs ):
-        super().__init__(agent_args=agents_dict['CONTROLLER'], env_args=env_args)
+    def __init__(self,agents_dict:dict,  env_args: EnvArgs , logging_level= logging.INFO ):
+        super().__init__(agent_args=agents_dict['CONTROLLER'], env_args=env_args, logging_level= logging_level)
         self.agents_dict = agents_dict
         self.planner = None
         self.controller = None
@@ -33,7 +34,10 @@ class MultiAgentExpArgsCP(MultiAgentExpArgsBase):
         with open(self.exp_dir / "planner_answer.json", "w") as f:
             json.dump(plan, f, indent=4, cls=DataclassJSONEncoder)
         
-        return plan[0]
+        if len(plan)!= 0:
+            return plan[0]
+        else:
+            return None 
 
 
 

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class PlannerAgentArg(MostBasicAgentArgs):
     agent_name: str = "PlannerAgent"
-    temperature: float = 0.1
+    temperature: float = 0
     use_chain_of_thought: bool = False
     chat_model_args: "BaseModelArgs" = None
 

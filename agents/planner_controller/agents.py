@@ -36,14 +36,14 @@ class PlannerAgent(MostBasicAgent):
 
     def get_action(self, obs: dict, last_steps: list, steps_failed: list) -> tuple[str, dict]:
 
-        main_prompt= PlannerPrompt([0,1,2,3,6], obs['goal'], last_steps, steps_failed)
+        main_prompt= PlannerPrompt([5,6,7,8,9,10], obs['goal'], last_steps, steps_failed)
         system_prompt, prompt = main_prompt.system_prompt, main_prompt.prompt
         prompt = self.add_screenshot(prompt, obs['screenshot'])
 
         messages = [SystemMessage(content=system_prompt), HumanMessage(content=prompt)]
 
         def parser(response: str) -> tuple[dict, bool, str]:
-            blocks= parse_html_tags_raise(response, keys=('plan','thought','observation'))
+            blocks= parse_html_tags_raise(response, keys=('plan','observation'), optional_keys='thought')
             if len(blocks) == 0:
                 raise ParseError("No code block found in the response")
             pattern = re.compile(r"[0-9]\..*\n")
@@ -52,10 +52,12 @@ class PlannerAgent(MostBasicAgent):
                 pattern = re.compile(r"[0-9]\..*.")
                 steps = pattern.findall(blocks['plan'])
             steps = [step.split('.')[1] for step in steps]
-            answer= {'steps':steps, 'thought': blocks['thought'], 'observation': blocks['observation'], "response_raw": response}
+            answer= {'steps':steps, 'observation': blocks['observation'], "response_raw": response}
+            if 'thought' in blocks:
+                answer['thought'] = blocks['thought']
             return answer
 
-        ans_dict = retry_raise(self.chat, messages, n_retry=4, parser=parser)
+        ans_dict = retry_raise(self.chat, messages, n_retry=6, parser=parser)
 
         return ans_dict
     

@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 
 from browsergym.experiments.loop import DataclassJSONEncoder
@@ -8,8 +9,8 @@ from browsergym.experiments.loop import EnvArgs
 from base.exp_args import MultiAgentExpArgsBase
 
 class MultiAgentExpArgsCPO(MultiAgentExpArgsBase):
-    def __init__(self,agents_dict:dict,  env_args: EnvArgs ):
-        super().__init__(agent_args=agents_dict['CONTROLLER'], env_args=env_args)
+    def __init__(self,agents_dict:dict,  env_args: EnvArgs ,logging_level= logging.INFO ):
+        super().__init__(agent_args=agents_dict['CONTROLLER'], env_args=env_args, logging_level= logging_level)
         self.agents_dict = agents_dict
         self.planner = None
         self.controller = None

@@ -5,6 +5,8 @@ class PlannerPrompt():
     as the Planner is to figure out the different steps required to complete a certain goal. You are an expert in navigating the internet and any web page possible.
     You have a screenshot of the state of the page as well as the steps executed.
     """
+        
+#OPEN ENDED EXAMPLES
         example1= f"""-Example 
 If the goal is "Open New York Times page" \n
 
@@ -53,9 +55,8 @@ Description on what you see in screenshot
 <plan>
 1. Open the Investopedia website.
 2. Search for articles on ”Trading for beginners.”
-3. Review the first three articles.
-4. Open the first article.
-5. Retrieve and provide the content of the second section to user.
+3. Open the first article.
+4. Retrieve the content of the second section to user.
 </plan>
 <thought>
 Reasoning for the plan
@@ -79,41 +80,7 @@ Reasoning for the plan
 </thought>
 
 """
-        example5=f"""Example 
-If the goal is "Find the best selling products of 2022"
-
-Your answer should be:
-<observation>
-Description on what you see in screenshot 
-</observation>
-<plan>
-1. Explore page to find relevant section related to reports on best selling products
-2. Filter products by year 2022
-3. Provide product with most sales
-</plan>
-<thought>
-Reasoning for the plan
-</thought>
-
-"""
-        example6=f"""Example 
-If the goal is "Find the customer's mail associated with the name Jane Doe"
-
-Your answer should be:
-<observation>
-Description on what you see in screenshot 
-</observation>
-<plan>
-1. Explore page to find relevant section related to customer's information
-2. Filter by name Jane Doe
-3. Retrieve Jane Doe's email 
-</plan>
-<thought>
-Reasoning for the plan
-</thought>
-
-"""
-        example7= f"""Example 
+        example5= f"""Example 
 If the goal is "Summarize the second news article in the Life section of the Irish Independent"
 
 Your answer should be:
@@ -131,7 +98,113 @@ Reasoning for the plan
 </thought>
 
 """
-        examples=[example1,example2,example3,example4,example5,example6,example7]
+
+#WEB ARENA EXAMPLES
+        example6=f"""Example 
+If the goal is "Find the best selling products of 2022"
+
+Your answer should be:
+<observation>
+Description on what you see in screenshot 
+</observation>
+<plan>
+1. Use sidebard to open Reports and find best selling products
+2. Filter products by year 2022 adn apply filter
+3. Provide product with most sales
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+
+"""
+        example7=f"""Example 
+If the goal is "Find the customer's mail associated with the name Jane Doe"
+
+Your answer should be:
+<observation>
+Description on what you see in screenshot 
+</observation>
+<plan>
+1. Explore page to find relevant section related to customer's information
+2. Filter by name Jane Doe
+3. Retrieve Jane Doe's email 
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+
+"""
+        
+        example8=f"""Example 
+If the goal is "Compare the difference in time for walking and driving route from Randyland to Carnegie Mellon University"
+
+Your answer should be:
+<observation>
+Description on what you see in screenshot 
+</observation>
+<plan>
+1. Find Directions section in page where you can enter start and destination
+2. Find walking time from Randyland to Carnegie Mellon University and remember it
+3. Find walking driving from Randyland to Carnegie Mellon University and remember it
+4. Provide user with walking and driving time 
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+"""
+        
+        example9=f"""Example 
+If the goal is "Provide zip code of Carnegie Mellon University "
+
+Your answer should be:
+<observation>
+Description on what you see in screenshot 
+</observation>
+<plan>
+1. Find Carnegie Mellon University in the map
+2. Find and provide zip code
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+"""
+        
+        example10=f"""Example 
+If the goal is "What brands appear most frequently among the top search terms "
+
+Your answer should be:
+<observation>
+Description on what you see in screenshot 
+</observation>
+<plan>
+1. Go to Marketing -> Search terms
+2. Sort by uses
+3. Provide three first items in list 
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+"""
+        
+        example11=f"""Example 
+If the goal is "Today is 6/12/2023. Tell me how many fulfilled orders I have over the past month, and the total amount of money I spent."
+
+Your answer should be:
+<observation>
+Description on what you see in screenshot 
+</observation>
+<plan>
+1. Go to My Account 
+2. Go to order section
+3. Filter orders by data
+4. Provide total orders and amount of money spent
+</plan>
+<thought>
+Reasoning for the plan
+</thought>
+"""
+
+        examples=[example1,example2,example3,example4,example5,example6,example7,example8, example9, example10, example11]
         self.prompt= f"""
 Based on the screenshot create a very highlevel plan with intermediate subgoals to achieve the user's final goal. Provide a chain of thought/reasoning of your answer.
 Please update your plan depending on the information provided in the Screenshot.
@@ -150,12 +223,13 @@ The user's goal is: {goal}
 
 You have executed succesfully the following actions: {last_steps}
 
-These steps have not been succesfully exectued: {steps_failed} 
-
-Please create a more decomposed plan in order to complete the failed steps.
-
 If the goal is complete please return an empty plan.
 """
+
+#These steps have not been succesfully exectued: {steps_failed} 
+
+#Please create a more decomposed plan in order to complete the failed steps.
+
 
         
         

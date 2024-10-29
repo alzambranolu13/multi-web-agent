@@ -34,8 +34,8 @@ from browsergym.experiments.utils import count_messages_token, count_tokens
 
 @dataclass
 class MultiAgentExpArgsBase(loop.ExpArgs):
-    def __init__(self, agent_args:AgentArgs,  env_args: EnvArgs ):
-        super().__init__(agent_args=agent_args, env_args=env_args)
+    def __init__(self, agent_args:AgentArgs,  env_args: EnvArgs ,logging_level ):
+        super().__init__(agent_args=agent_args, env_args=env_args, logging_level= logging_level)
         self.step_limit=20
 
     @abstractmethod
@@ -75,24 +75,31 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             logger.debug(f"Environment reset.")
             steps_completed= []
             steps_failed=[]
-            is_done = False
-            max_retries=10
+            max_retries_inner=7
+            max_steps= 15
+            steps=0
             while not step_info.is_done:
                 goal = self._multi_agent_step(step_info,steps_completed,steps_failed)
+                steps+=1
+                if goal== None:
+                    break
+                if steps >= max_steps:
+                    break 
                 retries= 0
-                while True:
-                    if (retries>= max_retries):
-                        break
+                is_done = False
+                while retries< max_retries_inner:
                     agent.set_goal(goal)
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
 
                     if action is None:
                         # will end the episode after saving the step info.
+                        steps_failed = []
                         step_info.truncated = True
                         break
 
                     if "Done" in action or "done" in action:
+                        steps_failed = []
                         is_done= True
                         break
 
