@@ -23,6 +23,7 @@ git checkout stable
 
 # Now, you can install agentlab now:
 pip install -e .
+playwright install
 
 # Now, go back to multi-web-agent:
 cd ../multi-web-agent
