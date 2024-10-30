@@ -23,7 +23,7 @@ class MultiAgentExpArgsCP(MultiAgentExpArgsBase):
         return self.controller   
 
 
-    def _multi_agent_step(self, step_info, steps_completed,steps_failed):  
+    def _multi_agent_step(self, step_info: StepInfo, steps_completed,steps_failed):  
 
         logger.debug(f"Starting step {step_info.step}.")
 
@@ -31,8 +31,8 @@ class MultiAgentExpArgsCP(MultiAgentExpArgsBase):
         planner_ans_dict = self.planner.get_action(step_info.obs.copy(),steps_completed,steps_failed)
         plan = planner_ans_dict['steps']
 
-        with open(self.exp_dir / "planner_answer.json", "w") as f:
-            json.dump(plan, f, indent=4, cls=DataclassJSONEncoder)
+        with open(self.exp_dir / f"planner_answer_step_{step_info.step}.json", "w") as f:
+            json.dump(planner_ans_dict, f, indent=4, cls=DataclassJSONEncoder)
         
         if len(plan)!= 0:
             return plan[0]

@@ -21,10 +21,11 @@ import agents
 from agents.cont_plan_obs.exp_args import MultiAgentExpArgsCPO
 from agents.planner_controller.exp_args import MultiAgentExpArgsCP
 
+import nltk; nltk.download('punkt')
 
 logging.getLogger().setLevel(logging.INFO)
 
-config='generic'
+config='CP'
 
 ## select the benchmark to run on
 #benchmark = "miniwob_tiny_test"
@@ -91,7 +92,7 @@ study_dir = make_study_dir(RESULTS_DIR, study_name)
 
 ## alternatively, relaunch an existing study
 # study_dir = get_most_recent_folder(RESULTS_DIR, contains=None)
-# exp_args_list, study_dir = relaunch_study(study_dir, relaunch_mode="incomplete_or_error")
+exp_args_list, study_dir = relaunch_study(study_dir, relaunch_mode="incomplete_or_error")
 
 
 ## Number of parallel jobs
