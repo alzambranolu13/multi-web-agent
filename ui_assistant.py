@@ -5,9 +5,7 @@ import agents.cont_plan_obs
 from agents.cont_plan_obs.exp_args import MultiAgentExpArgsCPO
 import agents.planner_controller
 from agents.planner_controller.exp_args import MultiAgentExpArgsCP
-from base.exp_args import MultiAgentExpArgsBase
 
-from agentlab.agents.agent_args import AgentArgs
 from agentlab.experiments.exp_utils import RESULTS_DIR
 from agentlab.experiments.launch_exp import import_object
 
@@ -74,7 +72,7 @@ def main():
     parser.add_argument(
         "--start_url",
         type=str,
-        default="http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:7780/admin",
+        default="https://www.google.com",
         help="The start page of the agent. Defaults to https://www.google.com",
     )
 

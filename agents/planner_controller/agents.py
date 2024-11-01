@@ -5,9 +5,9 @@ from dataclasses import asdict
 from agentlab.agents.most_basic_agent.most_basic_agent import MostBasicAgent
 from agentlab.agents import dynamic_prompting as dp
 from agentlab.agents.generic_agent.generic_agent import GenericAgent
-from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,RetryError, retry_raise
+from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,RetryError, retry
+from agentlab.llm.chat_api import make_system_message, make_user_message
 
-from langchain.schema import HumanMessage, SystemMessage
 
 from .prompts.dynamic_prompts import MyMainPrompt
 from .prompts.prompts import PlannerPrompt
@@ -36,11 +36,11 @@ class PlannerAgent(MostBasicAgent):
 
     def get_action(self, obs: dict, last_steps: list, steps_failed: list) -> tuple[str, dict]:
 
-        main_prompt= PlannerPrompt([5,6,7,8,9,10], obs['goal'], last_steps, steps_failed)
+        main_prompt= PlannerPrompt([0,1,2,3,4], obs['goal'], last_steps, steps_failed)
         system_prompt, prompt = main_prompt.system_prompt, main_prompt.prompt
         prompt = self.add_screenshot(prompt, obs['screenshot'])
 
-        messages = [SystemMessage(content=system_prompt), HumanMessage(content=prompt)]
+        messages = [make_system_message(system_prompt), make_user_message(prompt)]
 
         def parser(response: str) -> tuple[dict, bool, str]:
             blocks= parse_html_tags_raise(response, keys=('plan','observation'), optional_keys='thought')
@@ -57,7 +57,7 @@ class PlannerAgent(MostBasicAgent):
                 answer['thought'] = blocks['thought']
             return answer
 
-        ans_dict = retry_raise(self.chat, messages, n_retry=6, parser=parser)
+        ans_dict = retry(self.chat, messages, n_retry=6, parser=parser)
 
         return ans_dict
     
@@ -104,10 +104,10 @@ class ControllerAgent(GenericAgent):
             # cause it to be too long
 
             chat_messages = [
-                SystemMessage(content=system_prompt),
-                HumanMessage(content=prompt),
+                make_system_message(system_prompt),
+                make_user_message(prompt),
             ]
-            ans_dict = retry_raise(
+            ans_dict = retry(
                 self.chat_llm,
                 chat_messages,
                 n_retry=self.max_retry,
