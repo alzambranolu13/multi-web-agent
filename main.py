@@ -27,7 +27,7 @@ import nltk; nltk.download('punkt')
 
 logging.getLogger().setLevel(logging.INFO)
 
-config='CP'
+config='generic'
 
 ## select the benchmark to run on
 #benchmark = "miniwob_tiny_test"
@@ -67,7 +67,7 @@ if config == 'CPO':
         benchmark_name = benchmark,
         agent_names = 'multiagent_CPO',
         suffix = 'multiagent_CPO',
-        exp_args = args.expand_cross_product(
+        exp_exp_args_lists = args.expand_cross_product(
                 MultiAgentExpArgsCPO(  
                 agents_dict= {
                     'OBSERVER': agents.cont_plan_obs.OBSERVER_AGENT,
@@ -85,14 +85,13 @@ if config == 'generic':
         benchmark_name = benchmark,
         agent_names= 'generic_agent_4o_mini',
         suffix= 'generic_agent_4o_mini',  
-        exp_args = args.expand_cross_product(
+        exp_args_list = args.expand_cross_product(
                ExpArgs(
                       agent_args= import_object('agentlab.agents.generic_agent.AGENT_4o_MINI') ,
                       env_args= env_args_list, 
                       logging_level=log_level,
                       )
                 ),     
-        logging_level=log_level,
     )
 
 
