@@ -36,7 +36,7 @@ class PlannerAgent(MostBasicAgent):
 
     def get_action(self, obs: dict, last_steps: list, steps_failed: list) -> tuple[str, dict]:
 
-        main_prompt= PlannerPrompt([0,1,2,3,4], obs['goal'], last_steps, steps_failed)
+        main_prompt= PlannerPrompt([5,6,7,8,9,10], obs['goal'], last_steps, steps_failed)
         system_prompt, prompt = main_prompt.system_prompt, main_prompt.prompt
         prompt = self.add_screenshot(prompt, obs['screenshot'])
 
