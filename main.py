@@ -48,6 +48,7 @@ if  config == 'CP':
     study = Study(
         benchmark_name = benchmark,
         agent_names = 'multiagent_CP',
+        suffix = 'multiagent_CP',
         exp_args_list = args.expand_cross_product(
             MultiAgentExpArgsCP(
                 agents_dict= {
@@ -65,6 +66,7 @@ if config == 'CPO':
     study = Study(    
         benchmark_name = benchmark,
         agent_names = 'multiagent_CPO',
+        suffix = 'multiagent_CPO',
         exp_args = args.expand_cross_product(
                 MultiAgentExpArgsCPO(  
                 agents_dict= {
@@ -81,7 +83,8 @@ if config == 'CPO':
 if config == 'generic':
     study = Study( 
         benchmark_name = benchmark,
-        study_name= 'generic_agent_4o_mini',  
+        agent_names= 'generic_agent_4o_mini',
+        suffix= 'generic_agent_4o_mini',  
         exp_args = args.expand_cross_product(
                ExpArgs(
                       agent_args= import_object('agentlab.agents.generic_agent.AGENT_4o_MINI') ,
