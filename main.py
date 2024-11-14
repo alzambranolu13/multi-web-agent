@@ -29,9 +29,6 @@ from agents.planner_controller.exp_args import MultiAgentExpArgsCP
 logging.getLogger().setLevel(logging.INFO)
 
 def run_experiment(config,n_jobs):
-
-    #config='generic'
-
     ## select the benchmark to run on
     #benchmark = "miniwob_tiny_test"
     # benchmark = "miniwob"
@@ -52,7 +49,7 @@ def run_experiment(config,n_jobs):
             benchmark_name = benchmark,
             agent_names = 'multiagent_CP',
             suffix = 'multiagent_CP',
-            exp_args_list = args.expand_cross_product(
+            exp_args_list = args_exp.expand_cross_product(
                 MultiAgentExpArgsCP(
                     agents_dict= {
                         'PLANNER':agents.planner_controller.PLAN_AGENT,
