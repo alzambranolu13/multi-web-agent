@@ -1,5 +1,16 @@
 # multi-web-agent
 
+## Versioning
+
+The current agentlab/browsergym versions are used for po-web-agents:
+- AgentLab: 
+  - repo: `alzambranolu/AgentLab`
+  - branch: [`main`](https://github.com/alzambranolu13/AgentLab)
+  - hash: [`TODO`](https://github.com/alzambranolu13/AgentLab)
+- BrowserGym: `0.13.0`
+
+
+
 ## setting up
 
 We use python 3.12.
