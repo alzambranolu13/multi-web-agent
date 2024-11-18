@@ -11,13 +11,14 @@ The current agentlab/browsergym versions are used for po-web-agents:
 
 
 
-## setting up
+## Setting up
 
 We use python 3.12.
 
-First, install requirements
+First, clone this repo and create a virtual environment:
 ```bash
-# assumign inside /path/to/multi-web-agent
+git clone [https://github.com/mcgill-nlp/po-web-agents.git](https://github.com/McGill-NLP/multi-web-agent.git)
+cd multi-web-agent
 python -m venv venv
 source venv/bin/activate
 ```
@@ -28,9 +29,8 @@ Next, we need to install agentlab from the repository. we are using a stable for
 # assuming you are in /path/to/multi-web-agent
 cd ..
 git clone https://github.com/alzambranolu13/AgentLab  #
-#hash 695f7e648d2c1fb79ffe85f2dc26cf015ac1dbbb
 cd AgentLab/
-git checkout stable
+git checkout project-1
 
 # Now, you can install agentlab now:
 pip install -e .
