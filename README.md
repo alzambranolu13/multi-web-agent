@@ -35,7 +35,8 @@ git checkout project-1
 pip install -e .
 playwright install
 
-# finally, install requirements, which has a diff version of agentlab
+# finally go back to multi-web-agent and  install requirements
+cd ..
 pip install -r requirements.txt
 ```
 
