@@ -27,7 +27,6 @@ Next, we need to install agentlab from the repository. we are using a stable for
 
 ```bash
 # assuming you are in /path/to/multi-web-agent
-cd ..
 git clone https://github.com/alzambranolu13/AgentLab  #
 cd AgentLab/
 git checkout project-1
@@ -35,9 +34,6 @@ git checkout project-1
 # Now, you can install agentlab now:
 pip install -e .
 playwright install
-
-# Now, go back to multi-web-agent:
-cd ../multi-web-agent
 
 # finally, install requirements, which has a diff version of agentlab
 pip install -r requirements.txt
