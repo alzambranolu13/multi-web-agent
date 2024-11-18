@@ -19,7 +19,7 @@ First, clone this repo and create a virtual environment:
 ```bash
 git clone https://github.com/McGill-NLP/multi-web-agent.git
 cd multi-web-agent
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 ```
 
