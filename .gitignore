@@ -161,6 +161,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-cp_runner.sh
-generic_runner.sh
-AgentLab/
+.cp_runner.sh
+.generic_runner.sh
+
