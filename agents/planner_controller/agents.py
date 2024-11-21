@@ -5,9 +5,9 @@ from dataclasses import asdict
 from agentlab.agents.most_basic_agent.most_basic_agent import MostBasicAgent
 from agentlab.agents import dynamic_prompting as dp
 from agentlab.agents.generic_agent.generic_agent import GenericAgent
-from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,RetryError, retry
+from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,SystemMessage, retry, Discussion
 from agentlab.llm.chat_api import make_system_message, make_user_message
-
+from browsergym.experiments.agent import AgentInfo
 
 from .prompts.dynamic_prompts import MyMainPrompt
 from .prompts.prompts import PlannerPrompt
@@ -88,9 +88,9 @@ class ControllerAgent(GenericAgent):
 
         max_prompt_tokens, max_trunc_itr = self._get_maxes()
 
-        system_prompt = dp.SystemPrompt().prompt
+        system_prompt = SystemMessage(dp.SystemPrompt().prompt)
 
-        prompt = dp.fit_tokens(
+        human_prompt = dp.fit_tokens(
             shrinkable=main_prompt,
             max_prompt_tokens=max_prompt_tokens,
             model_name=self.chat_model_args.model_name,
@@ -103,10 +103,8 @@ class ControllerAgent(GenericAgent):
             # TODO, we would need to further shrink the prompt if the retry
             # cause it to be too long
 
-            chat_messages = [
-                make_system_message(system_prompt),
-                make_user_message(prompt),
-            ]
+            chat_messages = Discussion([system_prompt, human_prompt])
+
             ans_dict = retry(
                 self.chat_llm,
                 chat_messages,
@@ -114,13 +112,19 @@ class ControllerAgent(GenericAgent):
                 parser=main_prompt._parse_answer,
             )
             # inferring the number of retries, TODO: make this less hacky
-            stats["n_retry"] = (len(chat_messages) - 3) / 2
-            stats["busted_retry"] = 0
-        except RetryError as e:
-            ans_dict = {"action": None}
-            stats["busted_retry"] = 1
+            ans_dict["busted_retry"] = 0
+            # inferring the number of retries, TODO: make this less hacky
+            ans_dict["n_retry"] = (len(chat_messages) - 3) / 2
+        except ParseError as e:
+            ans_dict = dict(
+                action=None,
+                n_retry=self.max_retry + 1,
+                busted_retry=1,
+            )
 
-            stats["n_retry"] = self.max_retry + 1
+        stats = self.chat_llm.get_stats()
+        stats["n_retry"] = ans_dict["n_retry"]
+        stats["busted_retry"] = ans_dict["busted_retry"]
 
         self.plan = ans_dict.get("plan", self.plan)
         self.plan_step = ans_dict.get("step", self.plan_step)
@@ -128,7 +132,7 @@ class ControllerAgent(GenericAgent):
         self.memories.append(ans_dict.get("memory", None))
         self.thoughts.append(ans_dict.get("think", None))
 
-        agent_info = dict(
+        agent_info = AgentInfo(
             think=ans_dict.get("think", None),
             chat_messages=chat_messages,
             stats=stats,

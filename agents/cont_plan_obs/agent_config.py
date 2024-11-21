@@ -1,3 +1,5 @@
+import bgym
+
 from agentlab.agents import dynamic_prompting as dp
 from agentlab.llm.llm_configs import CHAT_MODEL_ARGS_DICT
 
@@ -33,11 +35,12 @@ FLAGS_GPT_4o = GenericPromptFlags(
         filter_visible_elements_only=False,
     ),
     action=dp.ActionFlags(
-        multi_actions=False,
-        action_set="bid",
+        action_set=bgym.HighLevelActionSetArgs(
+            subsets=["bid"],
+            multiaction=False,
+        ),
         long_description=False,
-        individual_examples=False,
-        demo_mode = "default"
+        individual_examples=True,
     ),
     use_plan=False,
     use_criticise=False,

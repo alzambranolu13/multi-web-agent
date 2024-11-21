@@ -88,6 +88,8 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                 retries= 0
                 is_done = False
                 while retries< max_retries_inner:
+                    if step_info.is_done:
+                        break
                     agent.set_goal(goal)
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
