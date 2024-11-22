@@ -36,4 +36,4 @@ pip install -r requirements.txt
 
 echo MULTIAGENT-DONE
 
-python3 main.py --config CP --n_jobs 4
+python3 main.py --config CP --n_jobs 6
