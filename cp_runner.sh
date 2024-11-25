@@ -5,6 +5,7 @@
 module load python/3.10 cuda/11.8
 
 export AGENTLAB_EXP_ROOT="/home/mila/a/alejandra.zambrano/scratch"
+export AGENTXRAY_SHARE_GRADIO="true"
 export OPENAI_API_KEY="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"
 
 export BASE_URL="http://ec2-18-232-29-212.compute-1.amazonaws.com"

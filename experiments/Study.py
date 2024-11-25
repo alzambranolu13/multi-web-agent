@@ -72,32 +72,6 @@ def _multiagent_on_benchmark_(
     env_args_list = benchmark.env_args_list
 
 
-    configurations_exp={
-        'CP': MultiAgentExpArgsCP(
-                agents_dict= {
-                    'PLANNER':agents.planner_controller.PLAN_AGENT,
-                    'CONTROLLER': agents.planner_controller.CONTROLLER_AGENT
-                },
-                env_args= env_args_list,
-                logging_level=logging_level
-        ),  
-        'CPO': MultiAgentExpArgsCPO(  
-                agents_dict= {
-                    'OBSERVER': agents.cont_plan_obs.OBSERVER_AGENT,
-                    'PLANNER':agents.cont_plan_obs.PLAN_AGENT,
-                    'CONTROLLER': agents.cont_plan_obs.CONTROLLER_AGENT,
-                },
-                env_args= env_args_list,
-                logging_level=logging_level
-        ), 
-        'generic': ExpArgs(
-                    agent_args= import_object('agentlab.agents.generic_agent.AGENT_4o_MINI') ,
-                    env_args= env_args_list, 
-                    logging_level=logging_level,
-                    )         
-    }
-
-
     exp_args_list = []
 
     for env_args in env_args_list: 
@@ -112,7 +86,7 @@ def _multiagent_on_benchmark_(
                 logging_level=logging_level
             )
                 
-            if config == 'CPO':
+            elif config == 'CPO':
                 exp_args = MultiAgentExpArgsCPO(  
                 agents_dict= {
                     'OBSERVER': agents.cont_plan_obs.OBSERVER_AGENT,
