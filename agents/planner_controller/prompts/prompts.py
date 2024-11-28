@@ -88,12 +88,6 @@ Reasoning for the plan
 
 
 
-if __name__ == '__main__':
-    print(os.getcwd())
-    test=open(f'docs/amazon/question0.txt', "r").read()  
-    #print(test)
-    a= PlannerPrompt('webarena','open this')
-    print(a.prompt)
      
         
         
