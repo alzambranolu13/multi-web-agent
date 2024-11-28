@@ -1,0 +1,3 @@
+1. Open Youtube website
+2. Click on Trending
+3. Rertrieve the total number of views in the first video

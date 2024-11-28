@@ -2,9 +2,12 @@ import logging
 import bgym
 from bgym import Benchmark, EnvArgs, ExpArgs
 from slugify import slugify
+from pathlib import Path
+import gzip
+import pickle
 
 from browsergym.experiments.loop import ExpArgs
-from agentlab.experiments.study import Study, logger
+from agentlab.experiments.study import Study, logger,inspect_results
 from agentlab.experiments.launch_exp import import_object
 from agentlab.experiments.exp_utils import add_dependencies
 from agentlab.experiments import reproducibility_util as repro
@@ -14,9 +17,11 @@ from agents.cont_plan_obs.exp_args import MultiAgentExpArgsCPO
 from agents.planner_controller.exp_args import MultiAgentExpArgsCP
 
 class MyStudy(Study):
-    def __init__(self, config , agent_args, benchmark, logging_level_stdout=logging.WARNING):
+    def __init__(self, config , agent_args, suffix, benchmark, logging_level_stdout=logging.WARNING):
         self.config = config
-        super().__init__(agent_args= agent_args, benchmark=benchmark, suffix= config ,logging_level_stdout=logging_level_stdout)
+        if suffix == None:
+            suffix= config
+        super().__init__(agent_args= agent_args, benchmark=benchmark, suffix= suffix ,logging_level_stdout=logging_level_stdout)
         
     @property
     def name(self):
@@ -32,6 +37,30 @@ class MyStudy(Study):
             study_name += f"_{self.suffix}"
         return study_name
     
+    @staticmethod
+    def load(dir: Path) -> "MyStudy":
+        dir = Path(dir)
+        study_path = dir / "study.pkl.gz"
+        if not study_path.exists() and dir.is_dir():
+            # For backward compatibility
+            # first_result = next(
+            #     inspect_results.yield_all_exp_results(savedir_base=dir, progress_fn=None)
+            # )
+            # benchmark_name = first_result.exp_args.env_args.task_name.split(".")[0]
+            # agent_args = first_result.exp_args.agent_args
+            # study = MyStudy(agent_args=agent_args, benchmark=benchmark_name, dir=dir)
+            raise Exception( 'No study.pkl.gz found please make sure it exists for relaunch')
+        else:
+            with gzip.open(dir / "study.pkl.gz", "rb") as f:
+                study = pickle.load(f)  # type: Study
+            study.dir = dir
+
+            # # just a check
+            # for i, exp_args in enumerate(study.exp_args_list):
+            #     if exp_args.order != i:
+            #         logging.warning(f"The order of the experiments is not correct. {exp_args.order} != {i}")
+
+        return study
     def make_exp_args_list(self):
         self.exp_args_list = _multiagent_on_benchmark_(
             config = self.config,

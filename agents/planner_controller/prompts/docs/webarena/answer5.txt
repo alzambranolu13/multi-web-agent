@@ -1,0 +1,4 @@
+1. Go to My Account 
+2. Go to order section
+3. Filter orders by data
+4. Provide total orders and amount of money spent

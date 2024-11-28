@@ -1,0 +1,7 @@
+1. Open ebay website
+2. Search for men’s watches.
+3. Filter results by the Rolex brand 
+4. Apply color filter to grey 
+5. Apply price filter from 13,000 to 15,000
+6. Pick first watch that appears after filtering 
+7. Provide the results to the user

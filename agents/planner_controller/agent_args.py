@@ -14,13 +14,13 @@ if TYPE_CHECKING:
 class PlannerAgentArg(MostBasicAgentArgs):
     agent_name: str = "PlannerAgent"
     temperature: float = 0
-    use_chain_of_thought: bool = False
-    chat_model_args: "BaseModelArgs" = None
+    use_failed_steps: float = False
 
     def make_agent(self) -> Agent:
         return PlannerAgent(
             temperature=self.temperature,
             use_chain_of_thought=self.use_chain_of_thought,
+            use_failed_steps= self.use_failed_steps,
             chat_model_args=self.chat_model_args,
         )
 
