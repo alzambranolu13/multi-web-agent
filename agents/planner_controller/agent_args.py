@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from agentlab.agents.most_basic_agent.most_basic_agent import  MostBasicAgentArgs
+from agentlab.agents.most_basic_agent.most_basic_agent import  MostBasicAgentArgs, AgentArgs
 from agentlab.agents.generic_agent.generic_agent import GenericAgentArgs
 from agents.planner_controller.agents import PlannerAgent, ControllerAgent
 from browsergym.experiments.agent import Agent 
@@ -8,7 +9,11 @@ from browsergym.experiments.agent import Agent
 if TYPE_CHECKING:
     from agentlab.llm.chat_api import BaseModelArgs
 
-
+@dataclass
+class MultiAgentArgs:
+    planner_args: AgentArgs
+    controller_args: AgentArgs
+    observer_args: AgentArgs = None
 
 
 class PlannerAgentArg(MostBasicAgentArgs):

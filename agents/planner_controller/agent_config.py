@@ -7,9 +7,10 @@ from agentlab.agents.generic_agent.generic_agent_prompt import GenericPromptFlag
 
 from .agent_args import ControllerAgentArgs,PlannerAgentArg
 
+def get_cp_planner_args(generic_agent_args):
+    return PlannerAgentArg(chat_model_args=generic_agent_args.chat_model_args)
 
-
-PLAN_AGENT = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
+PLAN_AGENT_CP = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
 
 FLAGS_GPT_4o = GenericPromptFlags(
     obs=dp.ObsFlags(
@@ -51,7 +52,7 @@ FLAGS_GPT_4o = GenericPromptFlags(
     extra_instructions="The first and most essential thing is to check if the goal has been achieved. After you think the goal is completed please send the user a done message, no need to re-verify",
 )
 
-CONTROLLER_AGENT = ControllerAgentArgs(
+CONTROLLER_AGENT_CP = ControllerAgentArgs(
     chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"],
     flags=FLAGS_GPT_4o,
 )

@@ -11,9 +11,9 @@ from .agent_args import ObserverAgentArgs, PlannerAgentArg, ContAgentArg
 
 
 
-PLAN_AGENT = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
-OBSERVER_AGENT = ObserverAgentArgs(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
-CONTROLLER_AGENT = ContAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
+PLAN_AGENT_CPO = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
+OBSERVER_AGENT_CPO = ObserverAgentArgs(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
+CONTROLLER_AGENT_CPO = ContAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"])
 
 FLAGS_GPT_4o = GenericPromptFlags(
     obs=dp.ObsFlags(
@@ -55,7 +55,7 @@ FLAGS_GPT_4o = GenericPromptFlags(
     extra_instructions="Evaluate if the goal is complete based on your previous action, please include in your chain of thought why you think the goal is either reached or not. After you think the goal is completed please send the user a done message, no need to re-verify",
 )
 
-CONTROLLER_AGENT = GenericAgentArgs(
-    chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"],
-    flags=FLAGS_GPT_4o,
-)
+# CONTROLLER_AGENT = GenericAgentArgs(
+#     chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"],
+#     flags=FLAGS_GPT_4o,
+# )

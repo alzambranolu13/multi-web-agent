@@ -5,8 +5,8 @@
 The current agentlab/browsergym versions are used for po-web-agents:
 - AgentLab: 
   - repo: `alzambranolu/AgentLab`
-  - branch: [`project-1`](https://github.com/alzambranolu13/AgentLab)
-  - hash: [`096cb59ed581d97c74607a0f86f6c9779a80be0c`](https://github.com/alzambranolu13/AgentLab/commit/096cb59ed581d97c74607a0f86f6c9779a80be0c)
+  - branch: [`project-2`](https://github.com/alzambranolu13/AgentLab)
+  - hash: [`be1998c5fad5bda47ba50497ec3899aae03e85ec`](https://github.com/alzambranolu13/AgentLab/commit/be1998c5fad5bda47ba50497ec3899aae03e85ec)
 - BrowserGym: `0.13.1`
 
 

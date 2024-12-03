@@ -1,14 +1,9 @@
 from .agent_config import (
-    PLAN_AGENT,
-    CONTROLLER_AGENT,
+    PLAN_AGENT_CP,
+    CONTROLLER_AGENT_CP,
 )
 
-# agent_config ={
-#     'PLANNER': PLAN_AGENT,
-#     'CONTROLLER': CONTROLLER_AGENT
-# }
-
 __all__ = [
-    'PLANNER',
-    'CONTROLLER'
+    'PLAN_AGENT_CP',
+    'CONTROLLER_AGENT_CP'
 ]

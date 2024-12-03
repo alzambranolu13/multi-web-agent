@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from agentlab.llm.chat_api import BaseModelArgs
 
 
+
 class PlannerAgent(MostBasicAgent):
     def __init__(self, temperature: float, use_chain_of_thought: bool, use_failed_steps: bool, chat_model_args: "BaseModelArgs"):
         super().__init__(temperature, use_chain_of_thought, chat_model_args)
