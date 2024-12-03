@@ -1,0 +1,4 @@
+1. Open the Investopedia website.
+2. Search for articles on ”Trading for beginners.”
+3. Open the first article.
+4. Retrieve the content of the second section to user.

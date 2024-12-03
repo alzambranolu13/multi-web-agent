@@ -1,0 +1,4 @@
+1. Open the Irish Independent website
+2. Navigate to the Life section
+3. Open the second article 
+4. Read and summarize the content and provide it to user

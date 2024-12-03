@@ -1,0 +1,3 @@
+1. Use sidebard to open Reports->  BestSelling
+2. Filter products by year 2022 adn apply filter
+3. Provide product with most sales

@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from agentlab.agents.most_basic_agent.most_basic_agent import  MostBasicAgentArgs
+from agentlab.agents.most_basic_agent.most_basic_agent import  MostBasicAgentArgs, AgentArgs
 from agentlab.agents.generic_agent.generic_agent import GenericAgentArgs
 from agents.planner_controller.agents import PlannerAgent, ControllerAgent
 from browsergym.experiments.agent import Agent 
@@ -8,19 +9,23 @@ from browsergym.experiments.agent import Agent
 if TYPE_CHECKING:
     from agentlab.llm.chat_api import BaseModelArgs
 
-
+@dataclass
+class MultiAgentArgs:
+    planner_args: AgentArgs
+    controller_args: AgentArgs
+    observer_args: AgentArgs = None
 
 
 class PlannerAgentArg(MostBasicAgentArgs):
     agent_name: str = "PlannerAgent"
     temperature: float = 0
-    use_chain_of_thought: bool = False
-    chat_model_args: "BaseModelArgs" = None
+    use_failed_steps: float = False
 
     def make_agent(self) -> Agent:
         return PlannerAgent(
             temperature=self.temperature,
             use_chain_of_thought=self.use_chain_of_thought,
+            use_failed_steps= self.use_failed_steps,
             chat_model_args=self.chat_model_args,
         )
 

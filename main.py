@@ -10,13 +10,39 @@ import argparse
 
 from agentlab.agents.agent_args import AgentArgs
 
+from agents import MultiAgentArgs
 from experiments.Study import MyStudy
-from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark
+from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_webarena_benchmark_split
+from agentlab.agents.generic_agent import (
+    AGENT_LLAMA3_70B,
+    AGENT_LLAMA31_70B,
+    RANDOM_SEARCH_AGENT,
+    AGENT_4o,
+    AGENT_4o_MINI,
+)
+from agents.planner_controller import (
+    PLAN_AGENT_CP,
+    CONTROLLER_AGENT_CP,
+
+)
+
+from agents.planner_controller.agent_args import (
+    PlannerAgentArg
+)
+
+from agents.cont_plan_obs import (
+    PLAN_AGENT_CPO,
+    OBSERVER_AGENT_CPO,
+    CONTROLLER_AGENT_CPO
+)
+
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
 logging.getLogger().setLevel(logging.INFO)
 
-def run_experiment(config,n_jobs):
+
+
+def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
     ## select the benchmark to run on
     #benchmark = "miniwob_tiny_test"
     # benchmark = "miniwob"
@@ -24,7 +50,7 @@ def run_experiment(config,n_jobs):
     # benchmark = "workarena.l2"
     # benchmark = "workarena.l3"
     #benchmark = "webarena"
-    benchmark = get_mini_webarena_benchmark()
+    benchmark = get_webarena_benchmark_split()
 
 
     # Set reproducibility_mode = True for reproducibility
@@ -34,18 +60,31 @@ def run_experiment(config,n_jobs):
 
     # Set relaunch = True to relaunch an existing study, this will continue incomplete
     # experiments and relaunch errored experiments
-    relaunch = False
+    relaunch = relaunch
 
     ## Number of parallel jobs
     #n_jobs = 4  # Make sure to use 1 job when debugging in VSCode
     # n_jobs = -1  # to use all available cores
+    multi_agent_args = None
+    single_agent_args = None
+    planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
+    if config == 'CP':
+        # TODO: do same as above for CONTROLLER_AGENT_CP, observer_args
+        multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= CONTROLLER_AGENT_CP, observer_args= None )
+
+    if config == 'CPO':
+        # TODO: do same as above for CONTROLLER_AGENT_CP, observer_args
+        multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= CONTROLLER_AGENT_CPO, observer_args= OBSERVER_AGENT_CPO )
+
+    if config == 'generic':
+        single_agent_args = AGENT_4o_MINI
 
     if relaunch:
         #  relaunch an existing study
-        study = MyStudy.load_most_recent(contains=None)
+        study = MyStudy.load_most_recent(contains=contains)
         study.find_incomplete(include_errors=True)   
     else: 
-        study =  MyStudy(config=config,agent_args=None, benchmark=benchmark,logging_level_stdout= logging.DEBUG)
+        study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG)
 
     study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=reproducibility_mode, n_relaunch=3)
 
@@ -63,16 +102,38 @@ if __name__ == "__main__":  # necessary for dask backend
             "--config",
             type=str,
             default="CP",
-            help="""Python path to the agent config. Defaults to : "agents.generic_agent.AGENT_4o".""",
+            help="""Python path to the agent config. Defaults to : "Planner-Controller configuration.""",
         )
     parser.add_argument(
             "--n_jobs",
+            type=int,
+            default=1,
+            help="""Number of jobs to run experiments. Defaults to : 1.""",
+        )
+    parser.add_argument(
+            "--suffix",
             type=str,
-            default="1",
-            help="""Python path to the agent config. Defaults to : "agents.generic_agent.AGENT_4o".""",
+            default=None,
+            help="""Suffix for experiment name. Defaults to : None.""",
+        )
+    parser.add_argument(
+            "--relaunch",
+            type=bool,
+            default=False,
+            help="""Bool value for relaunch". Defaults to false""",
+        )
+    parser.add_argument(
+            "--contains",
+            type=str,
+            default=None,
+            help="""Keyword to find exp dir if relaunch is set to true. Defaults to empty""",
         )
 
     args, unknown = parser.parse_known_args()
-    run_experiment(args.config, args.n_jobs)
+    if args.contains !=  None:
+        if args.contains == True:
+            raise Exception('Value contains is set to not None but relaunch is false')
+    
+    run_experiment(args.config, args.n_jobs,args.suffix,args.relaunch, args.contains)
     
 
