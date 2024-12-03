@@ -115,8 +115,8 @@ def _multiagent_on_benchmark_(
 
     for env_args in env_args_list: 
             exp_args = None
-            multi_agent_args.controller_args.set_benchmark(benchmark, demo_mode)
             if config == 'CP':
+                multi_agent_args.controller_args.set_benchmark(benchmark, demo_mode)
                 exp_args = MultiAgentExpArgsCP(
                     agents_dict= {
                         'PLANNER': multi_agent_args.planner_args,
@@ -127,6 +127,7 @@ def _multiagent_on_benchmark_(
                 )
                 
             elif config == 'CPO':
+                multi_agent_args.controller_args.set_benchmark(benchmark, demo_mode)
                 exp_args = MultiAgentExpArgsCPO(  
                     agents_dict= {
                         'OBSERVER': multi_agent_args.observer_args,
