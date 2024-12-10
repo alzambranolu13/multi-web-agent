@@ -5,7 +5,7 @@
 The current agentlab/browsergym versions are used for po-web-agents:
 - AgentLab: 
   - repo: `alzambranolu/AgentLab`
-  - branch: [`project-2`](https://github.com/alzambranolu13/AgentLab)
+  - branch: [`project-3`](https://github.com/alzambranolu13/AgentLab)
   - hash: [`be1998c5fad5bda47ba50497ec3899aae03e85ec`](https://github.com/alzambranolu13/AgentLab/commit/be1998c5fad5bda47ba50497ec3899aae03e85ec)
 - BrowserGym: `0.13.1`
 
@@ -29,7 +29,7 @@ Next, we need to install agentlab from the repository. we are using a stable for
 # assuming you are in /path/to/multi-web-agent
 git clone https://github.com/alzambranolu13/AgentLab  #
 cd AgentLab/
-git checkout project-1
+git checkout project-3
 
 # Now, you can install agentlab now:
 pip install -e .
