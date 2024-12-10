@@ -21,20 +21,18 @@ from agentlab.agents.generic_agent import (
     AGENT_4o_MINI,
 )
 from agents.planner_controller import (
-    PLAN_AGENT_CP,
-    CONTROLLER_AGENT_CP,
-
+    FLAGS_GPT_4o
 )
 
 from agents.planner_controller.agent_args import (
-    PlannerAgentArg
+    PlannerAgentArg,
+    ControllerAgentArgs
 )
 
-from agents.cont_plan_obs import (
-    PLAN_AGENT_CPO,
-    OBSERVER_AGENT_CPO,
-    CONTROLLER_AGENT_CPO
+from agents.cont_plan_obs.agent_args import (
+    ObserverAgentArgs,
 )
+
 
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
@@ -50,7 +48,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
     # benchmark = "workarena.l2"
     # benchmark = "workarena.l3"
     #benchmark = "webarena"
-    benchmark = get_mini_webarena_benchmark()
+    benchmark = get_webarena_benchmark_split()
 
 
     # Set reproducibility_mode = True for reproducibility
@@ -67,17 +65,20 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
     # n_jobs = -1  # to use all available cores
     multi_agent_args = None
     single_agent_args = None
-    planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
-    if config == 'CP':
-        # TODO: do same as above for CONTROLLER_AGENT_CP, observer_args
-        multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= CONTROLLER_AGENT_CP, observer_args= None )
-
-    if config == 'CPO':
-        # TODO: do same as above for CONTROLLER_AGENT_CP, observer_args
-        multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= CONTROLLER_AGENT_CPO, observer_args= OBSERVER_AGENT_CPO )
 
     if config == 'generic':
         single_agent_args = AGENT_4o_MINI
+    else:
+        planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
+        controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
+        observer_args = ObserverAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args)
+        if config == 'CP':
+            multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
+
+        if config == 'CPO':
+            multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
+
+    
 
     if relaunch:
         #  relaunch an existing study
@@ -135,5 +136,3 @@ if __name__ == "__main__":  # necessary for dask backend
             raise Exception('Value contains is set to not None but relaunch is false')
     
     run_experiment(args.config, args.n_jobs,args.suffix,args.relaunch, args.contains)
-    
-
