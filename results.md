@@ -7,3 +7,6 @@
 | Planner/Controller - Fixed Plan | Modular |  12.1  |
 | Planner/Controller    | Modular | 10.4    |
 
+Observations
+- In CP: I see that sometimes in the screenshot a step has been clearly succesful but the step keeps being part of the plan
+- In CPFixed: Maybe setting the History flag to False might be useful
