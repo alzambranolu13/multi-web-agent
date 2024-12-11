@@ -24,6 +24,7 @@ from agents.planner_controller import (
     FLAGS_GPT_4o
 )
 
+
 from agents.planner_controller.agent_args import (
     PlannerAgentArg,
     ControllerAgentArgs
@@ -33,6 +34,9 @@ from agents.cont_plan_obs.agent_args import (
     ObserverAgentArgs,
 )
 
+from agents.planner_controller_fixedPlan.agent_args import PlannerAgentArg as FixedPlannerAgentArg
+from agents.planner_controller_fixedPlan.agent_args import ControllerAgentArgs as FixedControllerAgentArg
+from agents.planner_controller_fixedPlan import  FLAGS_GPT_4o as FLAGS_GPT_4o_FIXED
 
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
@@ -72,13 +76,15 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
         observer_args = ObserverAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args)
-        if config == 'CP':
+        if config == 'CP' :
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
-
+        if config == 'CPFixed':
+            planner_args = FixedPlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
+            controller_args = FixedControllerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
+            multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
 
-    
 
     if relaunch:
         #  relaunch an existing study
@@ -102,7 +108,7 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--config",
             type=str,
-            default="CP",
+            default="CPFixed",
             help="""Python path to the agent config. Defaults to : "Planner-Controller configuration.""",
         )
     parser.add_argument(

@@ -1,0 +1,1 @@
+"Retrieve the second section of the first article related to 'Trading for beginners' on Investopedia"

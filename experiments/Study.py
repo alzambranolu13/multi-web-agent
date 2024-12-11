@@ -16,9 +16,11 @@ from agentlab.agents.agent_args import AgentArgs
 
 import agents
 from agents.cont_plan_obs.exp_args import MultiAgentExpArgsCPO
+from agents.planner_controller.exp_args import MultiAgentExpArgsCP
+from agents.planner_controller_fixedPlan.exp_args import MultiAgentExpArgsCPfixed
 import agents.planner_controller
 from agents import MultiAgentArgs
-from agents.planner_controller.exp_args import MultiAgentExpArgsCP
+
 
 class MyStudy(Study):
     def __init__(self, config , multi_agent_args, single_agent_args, suffix, benchmark, logging_level_stdout=logging.WARNING):
@@ -118,6 +120,17 @@ def _multiagent_on_benchmark_(
             if config == 'CP':
                 multi_agent_args.controller_args.set_benchmark(benchmark, demo_mode)
                 exp_args = MultiAgentExpArgsCP(
+                    agents_dict= {
+                        'PLANNER': multi_agent_args.planner_args,
+                        'CONTROLLER': multi_agent_args.controller_args
+                    },
+                    env_args= env_args,
+                    logging_level=logging_level
+                )
+
+            if config == 'CPFixed':
+                multi_agent_args.controller_args.set_benchmark(benchmark, demo_mode)
+                exp_args = MultiAgentExpArgsCPfixed(
                     agents_dict= {
                         'PLANNER': multi_agent_args.planner_args,
                         'CONTROLLER': multi_agent_args.controller_args
