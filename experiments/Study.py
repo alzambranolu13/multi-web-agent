@@ -128,7 +128,7 @@ def _multiagent_on_benchmark_(
                     logging_level=logging_level
                 )
 
-            if config == 'CPFixed':
+            elif config == 'CPFixed':
                 multi_agent_args.controller_args.set_benchmark(benchmark, demo_mode)
                 exp_args = MultiAgentExpArgsCPfixed(
                     agents_dict= {
