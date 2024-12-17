@@ -13,8 +13,8 @@ from browsergym.experiments.benchmark.configs import DEFAULT_HIGHLEVEL_ACTION_SE
 
 from typing import List
 
-TASK_IDS= [157,44,156,718]
-#TASK_IDS= [718]
+#TASK_IDS= [157,44,156]
+TASK_IDS= [718]
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):

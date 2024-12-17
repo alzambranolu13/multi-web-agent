@@ -19,9 +19,10 @@ if TYPE_CHECKING:
 
 
 class PlannerAgent(MostBasicAgent):
-    def __init__(self, temperature: float, use_chain_of_thought: bool, use_failed_steps: bool, chat_model_args: "BaseModelArgs"):
+    def __init__(self, temperature: float, use_chain_of_thought: bool, use_failed_steps: bool, use_previous_plan:bool, chat_model_args: "BaseModelArgs"):
         super().__init__(temperature, use_chain_of_thought, chat_model_args)
         self.use_failed_steps= use_failed_steps
+        self.use_previous_plan = use_previous_plan
 
     def add_screenshot(self, prompt, screenshot):
         if isinstance(prompt, str):
@@ -36,9 +37,9 @@ class PlannerAgent(MostBasicAgent):
         )
         return prompt
 
-    def get_action(self, obs: dict, last_steps: list, steps_failed: list) -> tuple[str, dict]:
+    def get_action(self, obs: dict, last_steps: list, steps_failed: list, previous_plan:str) -> tuple[str, dict]:
 
-        main_prompt= PlannerPrompt('webarena', obs['goal'], self.use_failed_steps, last_steps, steps_failed)
+        main_prompt= PlannerPrompt(example_types='webarena', goal=obs['goal'], use_failed_steps=self.use_failed_steps, use_previous_plan=self.use_previous_plan,last_steps= last_steps, steps_failed= steps_failed,previous_plan= previous_plan)
         system_prompt, prompt = main_prompt.system_prompt, main_prompt.prompt
         prompt = self.add_screenshot(prompt, obs['screenshot'])
 
@@ -48,7 +49,7 @@ class PlannerAgent(MostBasicAgent):
             blocks= parse_html_tags_raise(response, keys=('plan','observation'), optional_keys='thought')
             if len(blocks) == 0:
                 raise ParseError("No code block found in the response")
-            pattern = re.compile(r"[0-9]\..*\n")
+            pattern = re.compile(r"[0-9]\..*.")
             steps = pattern.findall(blocks['plan'])
             if len(steps)== 0:
                 pattern = re.compile(r"[0-9]\..*.")

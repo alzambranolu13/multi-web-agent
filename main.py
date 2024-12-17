@@ -84,8 +84,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
-
-
+            
     if relaunch:
         #  relaunch an existing study
         study = MyStudy.load_most_recent(contains=contains)
@@ -108,7 +107,7 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--config",
             type=str,
-            default="CPFixed",
+            default="CP",
             help="""Python path to the agent config. Defaults to : "Planner-Controller configuration.""",
         )
     parser.add_argument(

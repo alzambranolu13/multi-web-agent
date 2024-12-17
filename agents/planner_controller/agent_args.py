@@ -19,20 +19,22 @@ class MultiAgentArgs:
 class PlannerAgentArg(MostBasicAgentArgs):
     agent_name: str = "PlannerAgent"
     temperature: float = 0
-    use_failed_steps: float = False
+    use_failed_steps: bool = False
+    use_previous_plan: bool = True
 
     def make_agent(self) -> Agent:
         return PlannerAgent(
             temperature=self.temperature,
             use_chain_of_thought=self.use_chain_of_thought,
             use_failed_steps= self.use_failed_steps,
+            use_previous_plan= self.use_previous_plan,
             chat_model_args=self.chat_model_args,
         )
 
 class ControllerAgentArgs(GenericAgentArgs):
     def __init__(self, chat_model_args, flags ):
         super().__init__(chat_model_args=chat_model_args, flags=flags)
-        #self.temperature= 0.1
+        self.temperature= 0
     
     def __post_init__(self):
         self.agent_type = "Planner-Controller" # change to PlannerController, CPO, etc.

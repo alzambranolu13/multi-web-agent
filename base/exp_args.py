@@ -75,16 +75,14 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             logger.debug(f"Environment reset.")
             steps_completed= []
             steps_failed=[]
-            max_retries_inner=7
-            max_steps= 15
-            steps=0
+            plan= None
+            thought= None
+            max_retries_inner=2
             while not step_info.is_done:
-                goal = self._multi_agent_step(step_info,steps_completed,steps_failed)
-                steps+=1
+                plan = self._multi_agent_step(step_info,steps_completed,steps_failed,plan)
+                goal = plan[0]
                 if goal== None:
                     break
-                if steps >= max_steps:
-                    break 
                 retries= 0
                 is_done = False
                 while retries< max_retries_inner:
@@ -100,7 +98,7 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                         step_info.truncated = True
                         break
 
-                    if "Done" in action or "done" in action:
+                    if "noop" in action:
                         steps_failed = []
                         is_done= True
                         break
