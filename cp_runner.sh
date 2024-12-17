@@ -40,4 +40,5 @@ echo MULTIAGENT-DONE
 python3 main.py --config CP --n_jobs 4
 
 
-python3 main.py --config CP --n_jobs 4 --relaunch True --contains cp-on-webarena-test_CP
+python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2024-12-16_23-46-45_cp-on-webarena-test_CP
+

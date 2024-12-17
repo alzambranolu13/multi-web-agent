@@ -75,16 +75,13 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             logger.debug(f"Environment reset.")
             steps_completed= []
             steps_failed=[]
-            max_retries_inner=7
-            max_steps= 15
+            max_retries_inner=5
             steps=0
             while not step_info.is_done:
                 goal = self._multi_agent_step(step_info,steps_completed,steps_failed)
                 steps+=1
                 if goal== None:
                     break
-                if steps >= max_steps:
-                    break 
                 retries= 0
                 is_done = False
                 while retries< max_retries_inner:
@@ -95,12 +92,13 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                     logger.debug(f"Agent chose action:\n {action}")
 
                     if action is None:
+                        logger.debug(f"Agent returned None action. Ending episode.")
                         # will end the episode after saving the step info.
                         steps_failed = []
                         step_info.truncated = True
                         break
 
-                    if "Done" in action or "done" in action:
+                    if "noop" in action:
                         steps_failed = []
                         is_done= True
                         break
@@ -110,10 +108,6 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
 
                     _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
                     logger.debug(f"Chat info sent.")
-
-                    if action is None:
-                        logger.debug(f"Agent returned None action. Ending episode.")
-                        break
 
                     step_info = StepInfo(step=step_info.step + 1)
                     episode_info.append(step_info)
