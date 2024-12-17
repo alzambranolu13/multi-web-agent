@@ -36,7 +36,6 @@ from browsergym.experiments.utils import count_messages_token, count_tokens
 class MultiAgentExpArgsBase(loop.ExpArgs):
     def __init__(self, agent_args:AgentArgs,  env_args: EnvArgs ,logging_level ):
         super().__init__(agent_args=agent_args, env_args=env_args, logging_level= logging_level)
-        self.step_limit=20
 
     @abstractmethod
     def _multi_agent_step(self, env, episode_info):  
@@ -76,11 +75,11 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             steps_completed= []
             steps_failed=[]
             plan= None
-            thought= None
             max_retries_inner=2
             while not step_info.is_done:
                 plan = self._multi_agent_step(step_info,steps_completed,steps_failed,plan)
                 goal = plan[0]
+                logger.debug(f"Planner set goal to:{goal}")
                 if goal== None:
                     break
                 retries= 0
@@ -94,6 +93,7 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
 
                     if action is None:
                         # will end the episode after saving the step info.
+                        logger.debug(f"Agent returned None action. Ending episode.")
                         steps_failed = []
                         step_info.truncated = True
                         break
@@ -108,10 +108,6 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
 
                     _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
                     logger.debug(f"Chat info sent.")
-
-                    if action is None:
-                        logger.debug(f"Agent returned None action. Ending episode.")
-                        break
 
                     step_info = StepInfo(step=step_info.step + 1)
                     episode_info.append(step_info)
