@@ -1,4 +1,7 @@
 import numpy as np
+import json
+import pkg_resources
+import os
 
 from browsergym.experiments.benchmark.metadata.utils import (
     task_metadata,task_list_from_metadata
@@ -13,8 +16,21 @@ from browsergym.experiments.benchmark.configs import DEFAULT_HIGHLEVEL_ACTION_SE
 
 from typing import List
 
-TASK_IDS= [157,44,156,718]
+
+#TASK_IDS= [157,44,156,718]
 #TASK_IDS= [718]
+
+def get_task_ids_sampled_wa(package='data') -> List[int]:
+
+    task_ids_path = os.path.join(package,'webarena.task_ids.json')
+    
+    with open(task_ids_path) as f:
+        task_ids = json.load(f)
+    
+    assert isinstance(task_ids, list), f"Expected a list of task ids, got {task_ids}. This is an internal error that should be reported."
+
+    return list(sorted(task_ids))
+TASK_IDS: List[int] = get_task_ids_sampled_wa()
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):

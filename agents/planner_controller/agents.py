@@ -7,6 +7,7 @@ from agentlab.agents import dynamic_prompting as dp
 from agentlab.agents.generic_agent.generic_agent import GenericAgent
 from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,SystemMessage, retry, Discussion
 from agentlab.llm.chat_api import make_system_message, make_user_message
+from agentlab.llm.tracking import cost_tracker_decorator
 from browsergym.experiments.agent import AgentInfo
 
 from .prompts.dynamic_prompts import MyMainPrompt
@@ -36,6 +37,7 @@ class PlannerAgent(MostBasicAgent):
         )
         return prompt
 
+    @cost_tracker_decorator
     def get_action(self, obs: dict, last_steps: list, steps_failed: list) -> tuple[str, dict]:
 
         main_prompt= PlannerPrompt('webarena', obs['goal'], self.use_failed_steps, last_steps, steps_failed)
@@ -72,6 +74,7 @@ class ControllerAgent(GenericAgent):
     def set_goal(self,goal):
         self.goal= goal
  
+    @cost_tracker_decorator
     def get_action(self,obs): 
         self.obs_history.append(obs)
 
