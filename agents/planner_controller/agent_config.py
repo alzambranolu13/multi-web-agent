@@ -49,7 +49,7 @@ FLAGS_GPT_4o = GenericPromptFlags(
     enable_chat=False,
     max_prompt_tokens=None,
     be_cautious=True,
-    extra_instructions="The first and most essential thing is to check if the goal has been achieved. If the goal has been achieved return noop action, no need to re-verify"
+    extra_instructions="The first and most essential thing is to check if the goal has been achieved. If the goal has been achieved return noop action, avoid actions of verifying and re-verifying"
     #extra_instructions="The first and most essential thing is to check if the goal has been achieved. If the goal has been achieved please send the user a done message , no need to re-verify. Never forget to notifiy when the goal has been completed",
 )
 

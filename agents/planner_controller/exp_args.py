@@ -29,7 +29,7 @@ class MultiAgentExpArgsCP(MultiAgentExpArgsBase):
         logger.debug(f"Starting step {step_info.step}.")
 
         step_info.profiling.agent_start = time.time()
-        planner_ans_dict = self.planner.get_action(obs=step_info.obs.copy(),last_steps=steps_completed,steps_failed=steps_failed,previous_plan=previous_plan)
+        planner_ans_dict,_ = self.planner.get_action(obs=step_info.obs.copy(),last_steps=steps_completed,steps_failed=steps_failed,previous_plan=previous_plan)
         plan = planner_ans_dict['steps']
 
         with open(self.exp_dir/f"planner_answer_step_{step_info.step}.json", "w") as f:
