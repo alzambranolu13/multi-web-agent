@@ -23,12 +23,12 @@ from agents import MultiAgentArgs
 
 
 class MyStudy(Study):
-    def __init__(self, config , multi_agent_args, single_agent_args, suffix, benchmark, logging_level_stdout=logging.WARNING):
+    def __init__(self, config , multi_agent_args, single_agent_args, suffix, benchmark, logging_level= logging.DEBUG, logging_level_stdout=logging.WARNING):
         self.config = config
         self.multi_agent_args = multi_agent_args
         if suffix == None:
             suffix= config
-        super().__init__(agent_args= single_agent_args, benchmark=benchmark, suffix= suffix ,logging_level_stdout=logging_level_stdout)
+        super().__init__(agent_args= single_agent_args, benchmark=benchmark, suffix= suffix , logging_level= logging_level, logging_level_stdout=logging_level_stdout)
         
     @property
     def name(self):
@@ -103,8 +103,8 @@ def _multiagent_on_benchmark_(
     benchmark: bgym.Benchmark,
     single_agent_args: AgentArgs = None,
     demo_mode=False,
-    logging_level: int = logging.INFO,
-    logging_level_stdout: int = logging.INFO,
+    logging_level: int = logging.DEBUG,
+    logging_level_stdout: int = logging.DEBUG,
     ignore_dependencies=False,
 ):
     
