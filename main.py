@@ -52,7 +52,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
     # benchmark = "workarena.l2"
     # benchmark = "workarena.l3"
     #benchmark = "webarena"
-    benchmark = get_mini_webarena_benchmark()
+    benchmark = get_webarena_benchmark_split()
 
 
     # Set reproducibility_mode = True for reproducibility
