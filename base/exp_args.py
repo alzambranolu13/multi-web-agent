@@ -92,6 +92,7 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                     logger.debug(f"Agent chose action:\n {action}")
 
                     if action is None:
+                        logger.debug(f"Agent returned None action. Ending episode.")
                         # will end the episode after saving the step info.
                         logger.debug(f"Agent returned None action. Ending episode.")
                         steps_failed = []
