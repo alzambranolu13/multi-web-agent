@@ -11,4 +11,4 @@ Observations
 - In CP: I see that sometimes in the screenshot a step has been clearly succesful but the step keeps being part of the plan
 - In CP: I want to try making the inner cycle of the planner controller just a retry of 1. Basically this makes the planner revaluate at every step
 - In CPFixed: Maybe setting the History flag to False might be useful -> Update: Accuracy went down
-- 
+- Run Fixed Plan with 4o as a Planner
