@@ -40,11 +40,11 @@ from agents.planner_controller_fixedPlan import  FLAGS_GPT_4o as FLAGS_GPT_4o_FI
 
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
-logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 
-def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
+def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
     ## select the benchmark to run on
     #benchmark = "miniwob_tiny_test"
     # benchmark = "miniwob"
@@ -52,13 +52,13 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
     # benchmark = "workarena.l2"
     # benchmark = "workarena.l3"
     #benchmark = "webarena"
-    benchmark = get_webarena_benchmark_split()
+    benchmark = get_mini_webarena_benchmark()
 
 
     # Set reproducibility_mode = True for reproducibility
     # this will "ask" agents to be deterministic. Also, it will prevent you from launching if you have
     # local changes. For your custom agents you need to implement set_reproducibility_mode
-    reproducibility_mode = False 
+    reproducibility_mode = reproduce 
 
     # Set relaunch = True to relaunch an existing study, this will continue incomplete
     # experiments and relaunch errored experiments
@@ -72,6 +72,9 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
 
     if config == 'generic':
         single_agent_args = AGENT_4o_MINI
+        #set reproductibility for single agent
+        if reproducibility_mode:
+            single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
@@ -84,6 +87,9 @@ def run_experiment(config,n_jobs,suffix,relaunch,contains=None):
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
+        #set reproductibility for multi-agent
+        if reproducibility_mode:
+            multi_agent_args.controller_args.set_reproducibility_mode()
             
     if relaunch:
         #  relaunch an existing study
@@ -123,6 +129,12 @@ if __name__ == "__main__":  # necessary for dask backend
             help="""Suffix for experiment name. Defaults to : None.""",
         )
     parser.add_argument(
+            "--reproduce",
+            type=bool,
+            default=False,
+            help="""Bool for reproducibility mode. Defaults to : False""",
+        )
+    parser.add_argument(
             "--relaunch",
             type=bool,
             default=False,
@@ -140,4 +152,4 @@ if __name__ == "__main__":  # necessary for dask backend
         if args.contains == True:
             raise Exception('Value contains is set to not None but relaunch is false')
     
-    run_experiment(args.config, args.n_jobs,args.suffix,args.relaunch, args.contains)
+    run_experiment(config=args.config, n_jobs=args.n_jobs,suffix=args.suffix,relaunch=args.relaunch, contains=args.contains, reproduce=args.reproduce )

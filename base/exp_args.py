@@ -76,12 +76,16 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             steps_failed=[]
             plan= None
             max_retries_inner=2
+            action='noop'
             while not step_info.is_done:
-                plan = self._multi_agent_step(step_info,steps_completed,steps_failed,plan)
-                goal = plan[0]
-                logger.debug(f"Planner set goal to:{goal}")
-                if goal== None:
+                if action == None:
                     break
+                plan = self._multi_agent_step(step_info,steps_completed,steps_failed,plan)
+                if plan== None:
+                    step_info.truncated = True
+                    break
+                goal = plan[0]
+                logger.debug(f"Planner set goal to:{goal}")  
                 retries= 0
                 is_done = False
                 while retries< max_retries_inner:
@@ -91,24 +95,24 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
 
-                    if action is None:
-                        logger.debug(f"Agent returned None action. Ending episode.")
-                        # will end the episode after saving the step info.
-                        logger.debug(f"Agent returned None action. Ending episode.")
-                        steps_failed = []
-                        step_info.truncated = True
-                        break
-
                     if "noop" in action:
                         steps_failed = []
                         is_done= True
                         break
+
+                    if action is None:
+                        # will end the episode after saving the step info.
+                        step_info.truncated = True
 
                     step_info.save_step_info(self.exp_dir)
                     logger.debug(f"Step info saved.")
 
                     _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
                     logger.debug(f"Chat info sent.")
+
+                    if action is None:
+                        logger.debug(f"Agent returned None action. Ending episode.")
+                        break
 
                     step_info = StepInfo(step=step_info.step + 1)
                     episode_info.append(step_info)

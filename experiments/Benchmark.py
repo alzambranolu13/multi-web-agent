@@ -29,6 +29,7 @@ def get_task_ids_sampled_wa(package='data') -> List[int]:
 
     return list(sorted(task_ids))
 TASK_IDS: List[int] = get_task_ids_sampled_wa()
+#TASK_IDS= [43]
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):
@@ -44,7 +45,7 @@ class WebArenaBenchmarkWithoutReset(Benchmark):
 
                     default_instance = WebArenaInstance()
                     
-                    # default_instance.full_reset()  # no reset
+                    default_instance.full_reset()  # comment this line for no reset 
 
                 case _:
                     raise ValueError(f"Unknown benchmark backend {repr(backend)}. Note this is the class BenchmarkWithoutReset, which is a subclass of Benchmark that does not support reset, and only supports the webarena backend.")

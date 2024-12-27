@@ -62,7 +62,7 @@ class PlannerAgent(MostBasicAgent):
                 answer['thought'] = blocks['thought']
             return answer
 
-        ans_dict = retry(self.chat, messages, n_retry=6, parser=parser)
+        ans_dict = retry(self.chat, messages, n_retry=3, parser=parser)
 
         agent_info = bgym.AgentInfo(
                 think= ans_dict.get('thought',None),

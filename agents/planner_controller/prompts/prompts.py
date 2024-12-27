@@ -29,7 +29,9 @@ Put a high importance on the screenshot, this will help you decide on wether kee
 
 In your thought add the reason of every step and how it relates to the goal.
 
-Here are some examples of what is your expected behavior:
+Remember you are only a planner you don't have to determine wether the goal has been achieved or not, this will be determined by the controller.
+
+Here are some examples of what is your expected behavior, feel free to reuse this plans if you see a similar goal:
 
 """ 
         for example in examples:
@@ -39,13 +41,17 @@ Here are some examples of what is your expected behavior:
 
 Make sure to give your answer in the expected format.
 
+Simple and short plans are rewarded.
+
 The user's goal is: {goal}
 
 """
         if use_completed_steps and len(last_steps)!= 0:
             self.prompt+=f"""
-You have executed succesfully the following actions: {last_steps} (disclaimer: even if this is empty it doesn't mean no actions have been succesful, this is just additional information)
+This steps have been succesfully executed: {last_steps} 
+It's essential to not repeat completed steps. If a step is mentioned here DO NOT included in the plan again
 """
+#(disclaimer: even if this is empty it doesn't mean no actions have been succesful)           
         if use_previous_plan and previous_plan!= None:
             self.prompt+=f"""
 Your previous plan was {previous_plan}
@@ -58,7 +64,8 @@ Please adequate your plan to achieve the failed steps
 """        
 
         self.prompt+="""
-If the goal is complete please return an empty plan.
+Finally, remember to keep your plan highlevel, concise and in track with the goal avoiding unrequired steps.
+If all the steps have been completed succesfully return an empty plan. 
 """
 
             

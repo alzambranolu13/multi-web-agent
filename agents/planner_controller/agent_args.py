@@ -20,7 +20,7 @@ class PlannerAgentArg(MostBasicAgentArgs):
     agent_name: str = "PlannerAgent"
     temperature: float = 0
     use_failed_steps: bool = False
-    use_previous_plan: bool = True
+    use_previous_plan: bool = False
 
     def make_agent(self) -> Agent:
         return PlannerAgent(
