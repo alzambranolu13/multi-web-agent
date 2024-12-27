@@ -45,7 +45,7 @@ class WebArenaBenchmarkWithoutReset(Benchmark):
 
                     default_instance = WebArenaInstance()
                     
-                    default_instance.full_reset()  # comment this line for no reset 
+                    #default_instance.full_reset()  # comment this line for no reset 
 
                 case _:
                     raise ValueError(f"Unknown benchmark backend {repr(backend)}. Note this is the class BenchmarkWithoutReset, which is a subclass of Benchmark that does not support reset, and only supports the webarena backend.")
