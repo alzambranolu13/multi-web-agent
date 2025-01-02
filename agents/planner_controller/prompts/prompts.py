@@ -41,7 +41,7 @@ Here are some examples of what is your expected behavior, feel free to reuse thi
 
 Make sure to give your answer in the expected format.
 
-If you can tell by the examples the step of providing information to the user is the last step, this is because we can only provide information to the user one time. So make sure to first gather all the information needed and only include ONE providing step at the end.
+Providing information to the user must always be the last step, this is because we can only provide information to the user one time. So make sure to first gather all the information needed and only include ONE providing step at the end.
 
 Simple and short plans are rewarded.
 
