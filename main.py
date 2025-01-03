@@ -75,7 +75,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         #set reproductibility for single agent
         if reproducibility_mode:
             single_agent_args.chat_model_args.temperature=0
-            single_agent_args.set_reproducibility_mode()
+            #single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
@@ -90,7 +90,9 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
         #set reproductibility for multi-agent
         if reproducibility_mode:
-            multi_agent_args.controller_args.set_reproducibility_mode()
+            multi_agent_args.controller_args.chat_model_args.temperature=0
+            multi_agent_args.planner_args.chat_model_args.temperature=0
+            #multi_agent_args.controller_args.set_reproducibility_mode()
             
     if relaunch:
         #  relaunch an existing study
@@ -99,7 +101,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
     else: 
         study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG)
 
-    study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=reproducibility_mode, n_relaunch=3)
+    study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=False, n_relaunch=3)
 
     # if reproducibility_mode:
     #     study.append_to_journal(strict_reproducibility=True)
