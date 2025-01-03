@@ -1,1 +1,1 @@
-"What is the minimum travel time by car from Animal Rescue League of Pittsburgh to Schenley park?"
+"Find the resturants around CMU ArtPark Lab"
