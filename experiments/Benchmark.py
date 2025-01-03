@@ -31,46 +31,46 @@ def get_task_ids_sampled_wa(package='data') -> List[int]:
 TASK_IDS: List[int] = get_task_ids_sampled_wa()
 TASK_IDS= [377]
 
-# class WebArenaBenchmarkWithoutReset(Benchmark):
-#     def prepare_backends(self):
-#         print("Preparing backends for WebArenaBenchmarkWithoutReset")
-#         for backend in self.backends:
-#             match backend:
-#                 case "webarena":
-#                     # register environments
-#                     import browsergym.webarena
+class WebArenaBenchmarkWithoutReset(Benchmark):
+    def prepare_backends(self):
+        print("Preparing backends for WebArenaBenchmarkWithoutReset")
+        for backend in self.backends:
+            match backend:
+                case "webarena":
+                    # register environments
+                    import browsergym.webarena
 
-#                     # full reset the instance (requires environment variables properly set up)
-#                     from browsergym.webarena.instance import WebArenaInstance
+                    # full reset the instance (requires environment variables properly set up)
+                    from browsergym.webarena.instance import WebArenaInstance
 
-#                     default_instance = WebArenaInstance()
+                    default_instance = WebArenaInstance()
                     
-#                     #default_instance.full_reset()  # comment this line for no reset 
+                    #default_instance.full_reset()  # comment this line for no reset 
 
-#                 case _:
-#                     raise ValueError(f"Unknown benchmark backend {repr(backend)}. Note this is the class BenchmarkWithoutReset, which is a subclass of Benchmark that does not support reset, and only supports the webarena backend.")
-#     def subset_from_regexp(self, column, regexp):
-#         # extract the filtered task_name subset
-#         task_name_subset = task_list_from_metadata(self.task_metadata, {column: regexp})
+                case _:
+                    raise ValueError(f"Unknown benchmark backend {repr(backend)}. Note this is the class BenchmarkWithoutReset, which is a subclass of Benchmark that does not support reset, and only supports the webarena backend.")
+    def subset_from_regexp(self, column, regexp):
+        # extract the filtered task_name subset
+        task_name_subset = task_list_from_metadata(self.task_metadata, {column: regexp})
 
-#         # return the sub benchmark
-#         return WebArenaBenchmarkWithoutReset(
-#             name=f"{self.name}[{column}=/{regexp}/]",
-#             high_level_action_set_args=self.high_level_action_set_args,
-#             is_multi_tab=self.is_multi_tab,
-#             supports_parallel_seeds=self.supports_parallel_seeds,
-#             backends=self.backends,
-#             env_args_list=[
-#                 env_args
-#                 for env_args in self.env_args_list
-#                 if env_args.task_name in task_name_subset
-#             ],
-#             task_metadata=self.task_metadata,
-#         )
+        # return the sub benchmark
+        return WebArenaBenchmarkWithoutReset(
+            name=f"{self.name}[{column}=/{regexp}/]",
+            high_level_action_set_args=self.high_level_action_set_args,
+            is_multi_tab=self.is_multi_tab,
+            supports_parallel_seeds=self.supports_parallel_seeds,
+            backends=self.backends,
+            env_args_list=[
+                env_args
+                for env_args in self.env_args_list
+                if env_args.task_name in task_name_subset
+            ],
+            task_metadata=self.task_metadata,
+        )
                 
 def get_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return Benchmark(
+    return WebArenaBenchmarkWithoutReset(
         name="webarena",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
@@ -87,7 +87,7 @@ def get_webarena_benchmark():
 
 def get_mini_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return Benchmark(
+    return WebArenaBenchmarkWithoutReset(
         name="webarena_100",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
@@ -102,7 +102,7 @@ def get_mini_webarena_benchmark():
     )
 
 def get_webarena_benchmark_split(split='test'):
-    benchmark = Benchmark(
+    benchmark = WebArenaBenchmarkWithoutReset(
         name="webarena",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
