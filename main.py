@@ -74,6 +74,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         single_agent_args = AGENT_4o_MINI
         #set reproductibility for single agent
         if reproducibility_mode:
+            single_agent_args.chat_model_args.temperature=0
             single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
