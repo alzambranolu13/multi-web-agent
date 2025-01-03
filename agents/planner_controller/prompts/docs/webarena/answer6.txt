@@ -1,3 +1,2 @@
-1. Use "Find directions between two points" link to enter start and destination
-2. Set Start as Animal Rescue League of Pittsburgh and Destination as Schenley park
-3. Provide user with driving time 
+1. Go to Issues Page
+2. Explore ALL recent open issues 

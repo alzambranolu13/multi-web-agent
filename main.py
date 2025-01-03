@@ -100,8 +100,8 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
 
     study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=reproducibility_mode, n_relaunch=3)
 
-    if reproducibility_mode:
-        study.append_to_journal(strict_reproducibility=True)
+    # if reproducibility_mode:
+    #     study.append_to_journal(strict_reproducibility=True)
 
 
 if __name__ == "__main__":  # necessary for dask backend
@@ -131,7 +131,7 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--reproduce",
             type=bool,
-            default=False,
+            default=True,
             help="""Bool for reproducibility mode. Defaults to : False""",
         )
     parser.add_argument(
