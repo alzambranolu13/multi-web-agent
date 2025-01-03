@@ -18,13 +18,17 @@ export WA_WIKIPEDIA="$BASE_URL:8888/wikipedia_en_all_maxi_2022-05/A/User:The_oth
 export WA_MAP="$BASE_URL:3000"
 export WA_HOMEPAGE="$BASE_URL:4399"
 
-# export WA_SHOPPING="https://wa-shopping-az-0.mcgill-nlp.org"
-# export WA_SHOPPING_ADMIN="https://wa-shopping-admin-az-0.mcgill-nlp.org/admin"
-# export WA_REDDIT="https://wa-forum-az-0.mcgill-nlp.org/forums/all"
-# export WA_GITLAB="https://wa-gitlab-az-0.mcgill-nlp.org/explore"
-# export WA_WIKIPEDIA="https://wa-wikipedia-az-0.mcgill-nlp.org/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing"
-# export WA_MAP="https://wa-openstreetmap-az-0.mcgill-nlp.org"
-# export WA_HOMEPAGE="https://wa-homepage-az-0.mcgill-nlp.org"
+
+SUFFIX="az-0"
+
+export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
+export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
+export WA_SHOPPING_ADMIN="https://wa-shopping-admin-${SUFFIX}.mcgill-nlp.org/admin"
+export WA_REDDIT="https://wa-forum-${SUFFIX}.mcgill-nlp.org"
+export WA_GITLAB="https://wa-gitlab-${SUFFIX}.mcgill-nlp.org"
+export WA_WIKIPEDIA="https://wa-wikipedia-${SUFFIX}.mcgill-nlp.org/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing"
+export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
+export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
 #Configuration for webarena-browsergym
 pip install browsergym-webarena
