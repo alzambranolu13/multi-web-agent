@@ -90,6 +90,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         #set reproductibility for multi-agent
         if reproducibility_mode:
             multi_agent_args.controller_args.set_reproducibility_mode()
+            multi_agent_args.planner_args.set_reproducibility_mode()
             
     if relaunch:
         #  relaunch an existing study
@@ -98,10 +99,10 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
     else: 
         study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG)
 
-    study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=reproducibility_mode, n_relaunch=3)
+    study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=False, n_relaunch=3)
 
-    if reproducibility_mode:
-        study.append_to_journal(strict_reproducibility=True)
+    # if reproducibility_mode:
+    #     study.append_to_journal(strict_reproducibility=True)
 
 
 if __name__ == "__main__":  # necessary for dask backend
