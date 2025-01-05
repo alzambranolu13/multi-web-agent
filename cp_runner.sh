@@ -4,7 +4,7 @@
 #SBATCH --time=05:00:00
 module load python/3.10 cuda/11.8
 
-export AGENTLAB_EXP_ROOT="/home/mila/a/alejandra.zambrano/scratch"
+export AGENTLAB_EXP_ROOT="/home/mila/a/alejandra.zambrano/scratch/new_scratch"
 export AGENTXRAY_SHARE_GRADIO="true"
 export OPENAI_API_KEY="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"
 
@@ -44,8 +44,8 @@ pip install -r requirements.txt
 
 echo MULTIAGENT-DONE
 
-python3 main.py --config CP --n_jobs 4
+python3 main.py --config CP --n_jobs 4 --reproduce False
 
 
-python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2024-12-16_23-46-45_cp-on-webarena-test_CP
+python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2025-01-04_12-40-19_cp-on-webarena-100_CP
 

@@ -34,7 +34,7 @@ class PlannerAgentArg(MostBasicAgentArgs):
 class ControllerAgentArgs(GenericAgentArgs):
     def __init__(self, chat_model_args, flags ):
         super().__init__(chat_model_args=chat_model_args, flags=flags)
-        self.temperature= 0
+        self.temperature= 0.1
     
     def __post_init__(self):
         self.agent_type = "Planner-Controller" # change to PlannerController, CPO, etc.
