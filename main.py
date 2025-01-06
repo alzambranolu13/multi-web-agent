@@ -136,12 +136,14 @@ if __name__ == "__main__":  # necessary for dask backend
             type=bool,
             default=False,
             help="""Bool for reproducibility mode. Defaults to : False""",
+            action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--relaunch",
             type=bool,
             default=False,
             help="""Bool value for relaunch". Defaults to false""",
+            action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--contains",
