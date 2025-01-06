@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 echo MULTIAGENT-DONE
 
-python3 main.py --config CP --n_jobs 4 --reproduce False
+python3 main.py --config CP --n_jobs 4 
 
 
 python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2025-01-04_12-40-19_cp-on-webarena-100_CP
