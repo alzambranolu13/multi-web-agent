@@ -78,7 +78,7 @@ def get_webarena_benchmark():
         backends=["webarena"],
         env_args_list=make_env_args_list_from_repeat_tasks(
             task_list=task_list_from_metadata(metadata=task_metadata("webarena")),
-            max_steps=30,
+            max_steps=20,
             n_repeats=1,
             seeds_rng=np.random.RandomState(42),
         ),
@@ -95,7 +95,7 @@ def get_mini_webarena_benchmark():
         backends=["webarena"],
         env_args_list=make_env_args_list_from_fixed_seeds(
             task_list=[f"webarena.{task_id}" for task_id in TASK_IDS],
-            max_steps=30,
+            max_steps=20,
             fixed_seeds=[0],
         ),
         task_metadata=task_metadata("webarena"),
@@ -110,7 +110,7 @@ def get_webarena_benchmark_split(split='test'):
         backends=["webarena"],
         env_args_list=make_env_args_list_from_repeat_tasks(
             task_list=task_list_from_metadata(metadata=task_metadata("webarena")),
-            max_steps=30,
+            max_steps=20,
             n_repeats=1,
             seeds_rng=np.random.RandomState(42),
         ),
