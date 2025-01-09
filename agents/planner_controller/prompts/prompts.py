@@ -48,19 +48,18 @@ Simple and short plans are rewarded so avoid unrequired steps.
 
 The user's goal is: {goal}
 
-"""
-        if use_completed_steps and len(last_steps)!= 0:
-            self.prompt+=f"""
-This steps have been succesfully executed: {last_steps} 
-It's essential to not repeat completed steps. If a step is mentioned here DO NOT included in the plan again
-Importantly, DO NOT repeat or reformulate this step: {last_steps[-1]}
-"""
-#(disclaimer: even if this is empty it doesn't mean no actions have been succesful)           
+"""     
         if use_previous_plan and previous_plan!= None:
             self.prompt+=f"""
 Your previous plan was {previous_plan}
 Only make changes to the original plan if it's completely necessary to achieve goal.
 """
+        if use_completed_steps and len(last_steps)!= 0:
+            self.prompt+=f"""
+This steps have been succesfully executed: {last_steps} 
+It's essential to not repeat completed steps. If a step is mentioned here DO NOT included in the plan again
+"""
+#(disclaimer: even if this is empty it doesn't mean no actions have been succesful)    
         if (use_failed_steps):
             self.prompt+=f"""
 These steps have failed to be exectued: {steps_failed} 
