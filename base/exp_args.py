@@ -76,6 +76,8 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             steps_failed=[]
             plan= None
             max_retries_inner=2
+            max_newplan_refusal=3 
+            num_newplan_refusal=0
             action='noop'
             while not step_info.is_done:
                 if action == None:
@@ -91,18 +93,22 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                 while retries< max_retries_inner:
                     if step_info.is_done:
                         break
+                    if num_newplan_refusal>=max_newplan_refusal:
+                        pass
+                        #TODO FORCE NOOP TO NOT BE POSSIBLE 
                     agent.set_goal(goal)
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
 
-                    if "noop" in action:
-                        steps_failed = []
-                        is_done= True
-                        break
-
                     if action is None:
                         # will end the episode after saving the step info.
                         step_info.truncated = True
+
+                    elif "noop" in action:
+                        num_newplan_refusal+=1
+                        steps_failed = []
+                        is_done= True
+
 
                     step_info.save_step_info(self.exp_dir)
                     logger.debug(f"Step info saved.")

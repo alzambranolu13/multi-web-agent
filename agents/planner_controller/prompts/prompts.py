@@ -53,6 +53,7 @@ The user's goal is: {goal}
             self.prompt+=f"""
 This steps have been succesfully executed: {last_steps} 
 It's essential to not repeat completed steps. If a step is mentioned here DO NOT included in the plan again
+Importantly, DO NOT repeat or reformulate this step: {last_steps[-1]}
 """
 #(disclaimer: even if this is empty it doesn't mean no actions have been succesful)           
         if use_previous_plan and previous_plan!= None:
