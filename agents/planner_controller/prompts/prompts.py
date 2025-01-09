@@ -43,7 +43,8 @@ Make sure to give your answer in the expected format.
 
 Providing information to the user must always be the last step, this is because we can only provide information to the user one time. So make sure to first gather all the information needed and only include ONE providing step at the end.
 
-Simple and short plans are rewarded.
+Note the Controller Agent can observe the page same as you so avoid steps that include "Identify" if the information is already displayed.
+Simple and short plans are rewarded so avoid unrequired steps.
 
 The user's goal is: {goal}
 
@@ -66,7 +67,6 @@ Please adequate your plan to achieve the failed steps
 """        
 
         self.prompt+="""
-Finally, remember to keep your plan highlevel, concise and in track with the goal avoiding unrequired steps.
 If all the steps have been completed succesfully return an empty plan. 
 """
 

@@ -1,0 +1,3 @@
+1. Navigate to the Catalog section to access product details
+2. Filter products by quantity to find those with 3 units left
+3. Retrieve products with 3 units left
