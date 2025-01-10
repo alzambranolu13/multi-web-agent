@@ -74,7 +74,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         single_agent_args = AGENT_4o_MINI
         #set reproductibility for single agent
         if reproducibility_mode:
-            single_agent_args.chat_model_args.temperature=0
+            single_agent_args.set_reproducibility_mode()
             #single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
@@ -90,9 +90,9 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
         #set reproductibility for multi-agent
         if reproducibility_mode:
-            multi_agent_args.controller_args.chat_model_args.temperature=0
-            multi_agent_args.planner_args.chat_model_args.temperature=0
-            #multi_agent_args.controller_args.set_reproducibility_mode()
+            multi_agent_args.controller_args.set_reproducibility_mode()
+            multi_agent_args.planner_args.set_reproducibility_mode()
+            #multi_agent_args.controller_args
             
     if relaunch:
         #  relaunch an existing study
