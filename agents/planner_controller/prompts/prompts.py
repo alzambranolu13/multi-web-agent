@@ -52,7 +52,7 @@ The user's goal is: {goal}
         if use_previous_plan and previous_plan!= None:
             self.prompt+=f"""
 This is the original plan: {previous_plan}
-Stick to this exact same plan UNLESS a change is completely and uttelry necessary.
+Only make changes to the original plan if it's completely necessary to achieve goal.
 """
         if use_completed_steps and len(last_steps)!= 0:
             self.prompt+=f"""
