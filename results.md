@@ -12,3 +12,10 @@ Observations
 - In CP: I want to try making the inner cycle of the planner controller just a retry of 1. Basically this makes the planner revaluate at every step
 - In CPFixed: Maybe setting the History flag to False might be useful -> Update: Accuracy went down
 - Run Fixed Plan with 4o as a Planner
+
+| Model    | Config | Accuracy in 100 Web Arena |
+| -------- | ------- | ------- |
+| Generic - Screenshot off  | Mono | 14.0   |
+| Planner/Controller    | Modular | 15.0    |
+
+Still have issues with maps and sending user info

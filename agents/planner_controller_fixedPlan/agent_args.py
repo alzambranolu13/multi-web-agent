@@ -35,7 +35,7 @@ class ControllerAgentArgs(GenericAgentArgs):
         #self.temperature= 0.1
     
     def __post_init__(self):
-        self.agent_type = "Planner-Controller" # change to PlannerController, CPO, etc.
+        self.agent_type = "CPFixed" # change to PlannerController, CPO, etc.
         try:  # some attributes might be temporarily args.CrossProd for hyperparameter generation
             self.agent_name = f"{self.agent_type}-{self.chat_model_args.model_name}".replace("/", "_")
         except AttributeError:

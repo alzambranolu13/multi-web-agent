@@ -31,6 +31,7 @@ def get_task_ids_sampled_wa(package='data') -> List[int]:
 TASK_IDS: List[int] = get_task_ids_sampled_wa()
 #TASK_IDS= [126]
 
+
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):
         print("Preparing backends for WebArenaBenchmarkWithoutReset")
