@@ -15,7 +15,8 @@ Observations
 
 | Model    | Config | Accuracy in 100 Web Arena |
 | -------- | ------- | ------- |
-| Generic - Screenshot off  | Mono | 14.0   |
-| Planner/Controller    | Modular | 15.0    |
+| Generic - Screenshot On  | Mono | 18.0   |
+| Planner/Controller - Previous Plan Off    | Modular | 16.0    |
+| Planner/Controller - Previous Plan On    | Modular | 21.0    |
 
 Still have issues with maps and sending user info
