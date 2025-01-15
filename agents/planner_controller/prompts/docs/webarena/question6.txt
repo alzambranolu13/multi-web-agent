@@ -1,1 +1,1 @@
-"Check out the most recent open issues"
+"Find the resturants around CMU ArtPark Lab"

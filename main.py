@@ -75,6 +75,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         #set reproductibility for single agent
         if reproducibility_mode:
             single_agent_args.set_reproducibility_mode()
+            #single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
@@ -134,12 +135,14 @@ if __name__ == "__main__":  # necessary for dask backend
             type=bool,
             default=True,
             help="""Bool for reproducibility mode. Defaults to : False""",
+            action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--relaunch",
             type=bool,
             default=False,
             help="""Bool value for relaunch". Defaults to false""",
+            action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--contains",

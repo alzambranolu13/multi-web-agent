@@ -41,22 +41,25 @@ Here are some examples of what is your expected behavior, feel free to reuse thi
 
 Make sure to give your answer in the expected format.
 
-Simple and short plans are rewarded.
+Providing information to the user must always be the last step, this is because we can only provide information to the user one time. So make sure to first gather all the information needed and only include ONE providing step at the end.
+
+Note the Controller Agent can observe the page same as you so avoid steps that include "Identify" if the information is already displayed.
+Simple and short plans are rewarded so avoid unrequired steps.
 
 The user's goal is: {goal}
 
+"""     
+        if use_previous_plan and previous_plan!= None:
+            self.prompt+=f"""
+This is the original plan: {previous_plan}
+Only make changes to the original plan if it's completely necessary to achieve goal.
 """
         if use_completed_steps and len(last_steps)!= 0:
             self.prompt+=f"""
 This steps have been succesfully executed: {last_steps} 
 It's essential to not repeat completed steps. If a step is mentioned here DO NOT included in the plan again
 """
-#(disclaimer: even if this is empty it doesn't mean no actions have been succesful)           
-        if use_previous_plan and previous_plan!= None:
-            self.prompt+=f"""
-Your previous plan was {previous_plan}
-Only make changes to the original plan if it's completely necessary to achieve goal.
-"""
+#(disclaimer: even if this is empty it doesn't mean no actions have been succesful)    
         if (use_failed_steps):
             self.prompt+=f"""
 These steps have failed to be exectued: {steps_failed} 
@@ -64,7 +67,6 @@ Please adequate your plan to achieve the failed steps
 """        
 
         self.prompt+="""
-Finally, remember to keep your plan highlevel, concise and in track with the goal avoiding unrequired steps.
 If all the steps have been completed succesfully return an empty plan. 
 """
 

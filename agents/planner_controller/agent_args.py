@@ -20,7 +20,7 @@ class PlannerAgentArg(MostBasicAgentArgs):
     agent_name: str = "PlannerAgent"
     temperature: float = 0
     use_failed_steps: bool = False
-    use_previous_plan: bool = False
+    use_previous_plan: bool = True
 
     def make_agent(self) -> Agent:
         return PlannerAgent(
@@ -34,7 +34,7 @@ class PlannerAgentArg(MostBasicAgentArgs):
 class ControllerAgentArgs(GenericAgentArgs):
     def __init__(self, chat_model_args, flags ):
         super().__init__(chat_model_args=chat_model_args, flags=flags)
-        self.temperature= 0
+        self.temperature= 0.1
     
     def __post_init__(self):
         self.agent_type = "CP" # change to PlannerController, CPO, etc.

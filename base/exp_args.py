@@ -75,34 +75,39 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             steps_completed= []
             steps_failed=[]
             plan= None
-            max_retries_inner=2
+            max_substep_steps=2
+            # max_newplan_refusal=3 
+            # num_newplan_refusal=0
             action='noop'
             while not step_info.is_done:
-                if action == None:
-                    break
                 plan = self._multi_agent_step(step_info,steps_completed,steps_failed,plan)
                 if plan== None:
                     step_info.truncated = True
+                    step_info.save_step_info(self.exp_dir)
                     break
                 goal = plan[0]
                 logger.debug(f"Planner set goal to:{goal}")  
-                retries= 0
+                num_substep=0
                 is_done = False
-                while retries< max_retries_inner:
+                while num_substep< max_substep_steps:
                     if step_info.is_done:
                         break
+                    # if num_newplan_refusal>=max_newplan_refusal:
+                    #     pass
+                    #     #TODO FORCE NOOP TO NOT BE POSSIBLE 
                     agent.set_goal(goal)
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
 
-                    if "noop" in action:
-                        steps_failed = []
-                        is_done= True
-                        break
-
                     if action is None:
                         # will end the episode after saving the step info.
                         step_info.truncated = True
+
+                    elif "noop" in action:
+                        #num_newplan_refusal+=1
+                        steps_failed = []
+                        is_done= True
+
 
                     step_info.save_step_info(self.exp_dir)
                     logger.debug(f"Step info saved.")
@@ -120,7 +125,7 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                     logger.debug(f"Sending action to environment.")
                     step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
                     logger.debug(f"Environment stepped.")
-                    retries+=1
+                    num_substep+=1
                 if is_done == True:
                     steps_completed.append(goal)
                 else:

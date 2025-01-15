@@ -18,7 +18,6 @@ export WA_WIKIPEDIA="$BASE_URL:8888/wikipedia_en_all_maxi_2022-05/A/User:The_oth
 export WA_MAP="$BASE_URL:3000"
 export WA_HOMEPAGE="$BASE_URL:4399"
 
-
 SUFFIX="az-0"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
@@ -29,6 +28,7 @@ export WA_GITLAB="https://wa-gitlab-${SUFFIX}.mcgill-nlp.org"
 export WA_WIKIPEDIA="https://wa-wikipedia-${SUFFIX}.mcgill-nlp.org/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing"
 export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
+
 
 #Configuration for webarena-browsergym
 pip install browsergym-webarena
@@ -48,8 +48,8 @@ pip install -r requirements.txt
 
 echo MULTIAGENT-DONE
 
-python3 main.py --config CP --n_jobs 4
+python3 main.py --config CP --n_jobs 4 --reproduce
 
 
-python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2024-12-16_23-46-45_cp-on-webarena-test_CP
+python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2025-01-04_12-40-19_cp-on-webarena-100_CP
 
