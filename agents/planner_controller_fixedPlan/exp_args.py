@@ -24,12 +24,12 @@ class MultiAgentExpArgsCPfixed(MultiAgentExpArgsBase):
         return self.controller   
 
 
-    def _multi_agent_step(self, step_info: StepInfo, steps_completed,steps_failed):  
+    def _multi_agent_step(self, step_info: StepInfo):  
 
         logger.debug(f"Starting step {step_info.step}.")
 
         step_info.profiling.agent_start = time.time()
-        planner_ans_dict = self.planner.get_action(step_info.obs.copy(),steps_completed,steps_failed)
+        planner_ans_dict,agent_info = self.planner.get_action(step_info.obs.copy())
         plan = planner_ans_dict['steps']
 
         with open(self.exp_dir/f"planner_answer_step_{step_info.step}.json", "w") as f:
@@ -39,6 +39,8 @@ class MultiAgentExpArgsCPfixed(MultiAgentExpArgsBase):
             return plan
         else:
             return None 
+        
+
         
    
     def run(self):
@@ -67,20 +69,24 @@ class MultiAgentExpArgsCPfixed(MultiAgentExpArgsBase):
                 env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
             )
             logger.debug(f"Environment reset.")
-            steps_completed= []
-            steps_failed=[]
-            plan = self._multi_agent_step(step_info,steps_completed,steps_failed)
-            agent.set_plan(plan)
+
+            plan = self._multi_agent_step(step_info)
 
             while not step_info.is_done: 
+                if len(plan)==0:
+                    logger.debug(f"Empty plan received")
+                    step_info.truncated = True
+                    break
+                agent.set_goal(plan[0])
                 action = step_info.from_action(agent)
                 logger.debug(f"Agent chose action:\n {action}")
 
                 if action is None:
                     # will end the episode after saving the step info.
-                    steps_failed = []
                     step_info.truncated = True
-                    break
+                    
+                elif "noop" in action:
+                    plan.pop(0)
 
 
                 step_info.save_step_info(self.exp_dir)

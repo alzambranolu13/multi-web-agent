@@ -15,7 +15,7 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "purpose": ["debug-in-terminal"],
-            "args": ["--reproduce"]
+            "args": ["--reproduce","--config","CPFixed"]
         }
     ]
 }
