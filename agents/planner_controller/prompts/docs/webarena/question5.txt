@@ -1,1 +1,1 @@
-"Today is 6/12/2023. Tell me how many fulfilled orders I have over the past month, and the total amount of money I spent."
+"Find the customer's mail associated with the name Jane Doe"

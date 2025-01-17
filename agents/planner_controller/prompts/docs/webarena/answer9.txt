@@ -1,0 +1,2 @@
+1. Explore comments to find comment made by the manager of the store
+2. Reply to the manager's comment with "thanks! I am a big fan of your website."

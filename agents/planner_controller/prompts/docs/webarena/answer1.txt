@@ -1,3 +1,4 @@
-1. Explore page to find relevant section related to customer's information
-2. Filter by name Jane Doe
-3. Provide the user Jane Doe's email 
+1. Use "Find directions between two points" button to enter start and destination
+2. Find walking time from Randyland to Carnegie Mellon University and remember it
+3. Find walking driving from Randyland to Carnegie Mellon University and remember it
+4. Provide user with walking and driving time 

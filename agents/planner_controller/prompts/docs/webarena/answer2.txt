@@ -1,4 +1,4 @@
-1. Use "Find directions between two points" link to enter start and destination
-2. Find walking time from Randyland to Carnegie Mellon University and remember it
-3. Find walking driving from Randyland to Carnegie Mellon University and remember it
-4. Provide user with walking and driving time 
+1. Go to My Account 
+2. Go to order section
+3. Filter orders by data
+4. Provide total orders and amount of money spent

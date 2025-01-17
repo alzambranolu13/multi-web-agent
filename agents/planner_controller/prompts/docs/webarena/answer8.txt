@@ -1,0 +1,4 @@
+1. Search and open the ffmpeg-python repository
+2. Go to issues tab
+3. Click on question label to filter issues by the label "question"
+4. Provide list of issues that have label "question" to the user
