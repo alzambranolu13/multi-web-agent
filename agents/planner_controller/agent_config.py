@@ -96,7 +96,7 @@ FLAGS_GPT_4o = GenericPromptFlags(
     be_cautious=True,
     extra_instructions=f"""
 Note: the action select_option doesn't work most of the time so prioritize other actions like click.
-Remember if the goal mentions Providing or Retrieving the user with some information don't forget to send it to the user using the send msg to user action, when the goal includes "identifying", "review", "extract" there's no need to send message to the user just memory. 
+Remember only if the goal mentions Providing or Retrieving the user with some information, send it to the user using the send msg to user action. When the goal includes "identifying", "review", "determine" there's no need to send message to the user just memory. 
 The first and most essential thing is to check if the goal has been achieved. If the goal has been achieved return noop action, avoid actions of verifying and re-verifying".
 """
 )
