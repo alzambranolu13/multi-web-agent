@@ -12,7 +12,7 @@ from agentlab.agents.agent_args import AgentArgs
 
 from agents import MultiAgentArgs
 from experiments.Study import MyStudy
-from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_webarena_benchmark_split
+from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_train_webarena_benchmark, get_test_webarena_benchmark
 from agentlab.agents.generic_agent import (
     AGENT_LLAMA3_70B,
     AGENT_LLAMA31_70B,
@@ -75,6 +75,8 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         #set reproductibility for single agent
         if reproducibility_mode:
             single_agent_args.set_reproducibility_mode()
+        else:
+            single_agent_args.chat_model_args.temperature = 0.4
             #single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
@@ -133,7 +135,7 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--reproduce",
             type=bool,
-            default=True,
+            default=False,
             help="""Bool for reproducibility mode. Defaults to : False""",
             action=argparse.BooleanOptionalAction
         )

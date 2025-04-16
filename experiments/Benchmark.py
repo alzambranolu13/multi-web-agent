@@ -19,8 +19,8 @@ from typing import List
 #TASK_IDS= [157,44,156]
 #TASK_IDS= [718]
 
-def get_task_ids_sampled_wa(package='data') -> List[int]:
-    task_ids_path = os.path.join(package,'webarena.task_ids.json')
+def get_task_ids_sampled_wa(package='data', task_file='webarena.task_ids.mini.json') -> List[int]:
+    task_ids_path = os.path.join(package,task_file)
     
     with open(task_ids_path) as f:
         task_ids = json.load(f)
@@ -28,8 +28,9 @@ def get_task_ids_sampled_wa(package='data') -> List[int]:
     assert isinstance(task_ids, list), f"Expected a list of task ids, got {task_ids}. This is an internal error that should be reported."
 
     return list(sorted(task_ids))
-TASK_IDS: List[int] = get_task_ids_sampled_wa()
-#TASK_IDS= [126]
+TASK_IDS_MINI: List[int] = get_task_ids_sampled_wa(task_file='webarena.mini_ids.json')
+TASK_IDS_TRAIN: List[int] = get_task_ids_sampled_wa(task_file='webarena.train_ids.json')
+TASK_IDS_TEST: List[int] = get_task_ids_sampled_wa(task_file='webarena.test_ids.json')
 
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
@@ -71,7 +72,7 @@ class WebArenaBenchmarkWithoutReset(Benchmark):
                 
 def get_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return WebArenaBenchmarkWithoutReset(
+    return Benchmark(
         name="webarena",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
@@ -88,36 +89,48 @@ def get_webarena_benchmark():
 
 def get_mini_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return WebArenaBenchmarkWithoutReset(
+    return Benchmark(
         name="webarena_100",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
         supports_parallel_seeds=False,
         backends=["webarena"],
         env_args_list=make_env_args_list_from_fixed_seeds(
-            task_list=[f"webarena.{task_id}" for task_id in TASK_IDS],
+            task_list=[f"webarena.{task_id}" for task_id in TASK_IDS_MINI],
             max_steps=30,
             fixed_seeds=[0],
         ),
         task_metadata=task_metadata("webarena"),
     )
 
-def get_webarena_benchmark_split(split='test'):
-    benchmark = WebArenaBenchmarkWithoutReset(
-        name="webarena",
+def get_train_webarena_benchmark():
+    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    return Benchmark(
+        name="webarena_100",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
         supports_parallel_seeds=False,
         backends=["webarena"],
-        env_args_list=make_env_args_list_from_repeat_tasks(
-            task_list=task_list_from_metadata(metadata=task_metadata("webarena")),
+        env_args_list=make_env_args_list_from_fixed_seeds(
+            task_list=[f"webarena.{task_id}" for task_id in TASK_IDS_TRAIN],
             max_steps=30,
-            n_repeats=1,
-            seeds_rng=np.random.RandomState(42),
+            fixed_seeds=[0],
         ),
         task_metadata=task_metadata("webarena"),
     )
 
-    benchmark_split = benchmark.subset_from_split(split) # type: ignore
-
-    return benchmark_split
+def get_test_webarena_benchmark():
+    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    return Benchmark(
+        name="webarena_100",
+        high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
+        is_multi_tab=True,
+        supports_parallel_seeds=False,
+        backends=["webarena"],
+        env_args_list=make_env_args_list_from_fixed_seeds(
+            task_list=[f"webarena.{task_id}" for task_id in TASK_IDS_TEST],
+            max_steps=30,
+            fixed_seeds=[0],
+        ),
+        task_metadata=task_metadata("webarena"),
+    )
