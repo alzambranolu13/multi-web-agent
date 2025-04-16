@@ -7,10 +7,10 @@ PROMPT_DIR = os. getcwd()+'/agents/planner_controller/prompts/docs'
 
 #example_types can only be 'webarena', 'open_ended', 'amazon', 'ebay', 'encyclopedia', 'reddit', 'wikipedia'
 class PlannerPrompt():
-    def __init__(self , example_types:str | list= 'webarena', goal= None, use_failed_steps:bool = False,last_steps=[], steps_failed=[]):
+    def __init__(self , example_types:str | list= 'webarena', goal= None):
         self.system_prompt= f"""
-    You are part of a collection of Web Agents which goal is to help the user perform tasks using a web browser. Your tasks 
-    as the Planner is to figure out the different steps required to complete a certain goal. You are an expert in navigating the internet and any web page possible.
+    You are part of a collection of Web Agents Planner-Controller which goal is to help the user perform tasks using a web browser. The Planner creates a plan to achieve the goal and the Controller interacts with the environment to follow the steps of the plan. 
+    Your tasks as the Planner is to figure out the different steps required to complete a certain goal. You are an expert in navigating the internet and any web page possible.
     You have a screenshot of the state of the page as well as the steps executed.
     """
         examples= None
@@ -25,9 +25,13 @@ class PlannerPrompt():
 
         self.prompt= f"""
 Based on the screenshot create a very highlevel plan with intermediate subgoals to achieve the user's final goal. Provide a chain of thought/reasoning of your answer.
-Please update your plan depending on the information provided in the Screenshot.
+Put a high importance on the screenshot, this will help you decide on wether keeping the plan or updating the plan. Avoid any repetition of steps, if the screenshot crearly proves a step being completed don't include it in the plan.
 
-Here are some examples of what is your expected behavior:
+In your thought add the reason of every step and how it relates to the goal.
+
+Remember you are only a planner you don't have to determine wether the goal has been achieved or not, this will be determined by the controller.
+
+Here are some examples of what is your expected behavior, feel free to reuse this plans if you see a similar goal:
 
 """ 
         for example in examples:
@@ -37,19 +41,15 @@ Here are some examples of what is your expected behavior:
 
 Make sure to give your answer in the expected format.
 
+Providing information to the user must always be the last step, this is because we can only provide information to the user one time. So make sure to first gather all the information needed and only include ONE providing step at the end.
+
+Note the Controller Agent can observe the page same as you so avoid steps that include "Identify" if the information is already displayed.
+Simple and short plans are rewarded so avoid unrequired steps.
+
 The user's goal is: {goal}
 
-You have executed succesfully the following actions: {last_steps}
+"""     
 
-If the goal is complete please return an empty plan.
-"""
-        if (use_failed_steps):
-            self.prompt+=f"""
-These steps have failed to be exectued: {steps_failed} 
-Please adequate your plan to achieve the failed steps
-"""
-            
-#Please create a more decomposed plan in order to complete the failed steps.
 
 
 def get_all_examples():

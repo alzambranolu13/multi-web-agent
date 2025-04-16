@@ -76,8 +76,6 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
             steps_failed=[]
             plan= None
             max_substep_steps=2
-            # max_newplan_refusal=3 
-            # num_newplan_refusal=0
             action='noop'
             while not step_info.is_done:
                 plan = self._multi_agent_step(step_info,steps_completed,steps_failed,plan)

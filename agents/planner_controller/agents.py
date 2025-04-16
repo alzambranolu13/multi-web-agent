@@ -56,7 +56,7 @@ class PlannerAgent(MostBasicAgent):
             if len(steps)== 0:
                 pattern = re.compile(r"[0-9]\..*.")
                 steps = pattern.findall(blocks['plan'])
-            steps = [step.split('.')[1] for step in steps]
+            steps = [step.split('.',1)[1] for step in steps]
             answer= {'steps':steps, 'observation': blocks['observation'], "response_raw": response}
             if 'thought' in blocks:
                 answer['thought'] = blocks['thought']
