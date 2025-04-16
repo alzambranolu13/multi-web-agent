@@ -1,6 +1,2 @@
-1. Go to create New project/repository
-2. Create a project with name bafta_awards_nolan
-3. Navigate to the page to modify README
-4. Delete the currrent contents of README
-5. Edit README file to include a list of movies nominated for BAFTA Awards by Christopher Nolan
-6. Create and merge commit with the changes made
+1. Find Carnegie Mellon University in the map
+2. Find and provide the user the zip code

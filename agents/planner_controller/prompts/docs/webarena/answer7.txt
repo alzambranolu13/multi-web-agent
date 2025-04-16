@@ -1,3 +1,0 @@
-1. Go to reviews section
-2. Determine if there are reviewers who mention "under water photo" in the reviews
-2. Provide the user with reviewers, if exist, who mention "under water photo"
