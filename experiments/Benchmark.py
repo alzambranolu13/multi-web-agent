@@ -31,6 +31,7 @@ def get_task_ids_sampled_wa(package='data', task_file='webarena.task_ids.mini.js
 TASK_IDS_MINI: List[int] = get_task_ids_sampled_wa(task_file='webarena.mini_ids.json')
 TASK_IDS_TRAIN: List[int] = get_task_ids_sampled_wa(task_file='webarena.train_ids.json')
 TASK_IDS_TEST: List[int] = get_task_ids_sampled_wa(task_file='webarena.test_ids.json')
+TASK_IDS_MINI = [126]
 
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
@@ -89,16 +90,17 @@ def get_webarena_benchmark():
 
 def get_mini_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return Benchmark(
+    return WebArenaBenchmarkWithoutReset(
         name="webarena_100",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
         supports_parallel_seeds=False,
         backends=["webarena"],
-        env_args_list=make_env_args_list_from_fixed_seeds(
+        env_args_list=make_env_args_list_from_repeat_tasks(
             task_list=[f"webarena.{task_id}" for task_id in TASK_IDS_MINI],
             max_steps=30,
-            fixed_seeds=[0],
+            n_repeats=1,
+            seeds_rng=np.random.RandomState(42),
         ),
         task_metadata=task_metadata("webarena"),
     )

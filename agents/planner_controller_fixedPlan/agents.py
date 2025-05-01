@@ -1,7 +1,6 @@
 import re
 from typing import TYPE_CHECKING
 from dataclasses import asdict
-import bgym
 
 from agentlab.agents.most_basic_agent.most_basic_agent import MostBasicAgent
 from agentlab.agents import dynamic_prompting as dp
@@ -12,7 +11,6 @@ from browsergym.experiments.agent import AgentInfo
 
 from .prompts.dynamic_prompts import MyMainPrompt
 from .prompts.prompts import PlannerPrompt
-from llm.tracking import cost_tracker_decorator
 
 
 if TYPE_CHECKING:
@@ -21,8 +19,11 @@ if TYPE_CHECKING:
 
 
 class PlannerAgent(MostBasicAgent):
-    def __init__(self, temperature: float, use_chain_of_thought: bool, chat_model_args: "BaseModelArgs"):
+    def __init__(self, temperature: float, use_chain_of_thought: bool, chat_model_args: "BaseModelArgs", strategy: str = "strategy_1", prompt_opt: int = 0):
         super().__init__(temperature, use_chain_of_thought, chat_model_args)
+        self.strategy = strategy
+        self.prompt_opt = prompt_opt
+
 
     def add_screenshot(self, prompt, screenshot):
         if isinstance(prompt, str):
@@ -37,9 +38,9 @@ class PlannerAgent(MostBasicAgent):
         )
         return prompt
 
-    @cost_tracker_decorator
-    def get_action(self, obs: dict ) -> tuple[str, dict]:
-        main_prompt= PlannerPrompt(example_types='webarena', goal=obs['goal'])
+    def get_action(self, obs: dict) -> tuple[str, dict]:
+
+        main_prompt= PlannerPrompt(obs['goal'], self.strategy, self.prompt_opt)
         system_prompt, prompt = main_prompt.system_prompt, main_prompt.prompt
         prompt = self.add_screenshot(prompt, obs['screenshot'])
 
@@ -49,43 +50,26 @@ class PlannerAgent(MostBasicAgent):
             blocks= parse_html_tags_raise(response, keys=('plan','observation'), optional_keys='thought')
             if len(blocks) == 0:
                 raise ParseError("No code block found in the response")
-            pattern = re.compile(r"[0-9]\..*.")
-            steps = pattern.findall(blocks['plan'])
-            if len(steps)== 0:
-                pattern = re.compile(r"[0-9]\..*.")
-                steps = pattern.findall(blocks['plan'])
-            steps = [step.split('.',1)[1] for step in steps]
-            answer= {'steps':steps, 'observation': blocks['observation'], "response_raw": response}
+            answer= {'steps': blocks['plan'], 'observation': blocks['observation'], "response_raw": response}
             if 'thought' in blocks:
                 answer['thought'] = blocks['thought']
             return answer
 
-        ans_dict = retry(self.chat, messages, n_retry=3, parser=parser)
+        ans_dict = retry(self.chat, messages, n_retry=4, parser=parser)
 
-        agent_info = bgym.AgentInfo(
-                think= ans_dict.get('thought',None),
-                chat_messages=messages,
-                # put any stats that you care about as long as it is a number or a dict of numbers
-                stats={"prompt_length": len(messages), "response_length": ans_dict.get('thought','')},
-                markdown_page="Add any txt information here, including base 64 images, to display in xray",
-                extra_info={"chat_model_args": asdict(self.chat_model_args)},
-            )
-
-        return ans_dict,agent_info
+        return ans_dict
     
 
 class ControllerAgent(GenericAgent):
     def __init__(self,chat_model_args, flags, max_retry ):
         super().__init__(chat_model_args=chat_model_args, flags=flags, max_retry=max_retry )
-        self.goal = None
-    
-    def set_goal(self,goal):
-        self.goal= goal
+        self.plan= None
+
+    def set_plan(self,plan):
+        self.plan= plan
  
-    @cost_tracker_decorator
     def get_action(self,obs): 
         self.obs_history.append(obs)
-
         main_prompt = MyMainPrompt(
             action_set=self.action_set,
             obs_history=self.obs_history,
@@ -95,9 +79,8 @@ class ControllerAgent(GenericAgent):
             previous_plan=self.plan,
             step=self.plan_step,
             flags=self.flags,
-            goal = self.goal
+            plan=self.plan
         )
-
 
         max_prompt_tokens, max_trunc_itr = self._get_maxes()
 
@@ -110,21 +93,17 @@ class ControllerAgent(GenericAgent):
             max_iterations=max_trunc_itr,
             additional_prompts=system_prompt,
         )
-
-        stats = {}
         try:
             # TODO, we would need to further shrink the prompt if the retry
             # cause it to be too long
 
             chat_messages = Discussion([system_prompt, human_prompt])
-
             ans_dict = retry(
                 self.chat_llm,
                 chat_messages,
                 n_retry=self.max_retry,
                 parser=main_prompt._parse_answer,
             )
-            # inferring the number of retries, TODO: make this less hacky
             ans_dict["busted_retry"] = 0
             # inferring the number of retries, TODO: make this less hacky
             ans_dict["n_retry"] = (len(chat_messages) - 3) / 2
@@ -153,6 +132,3 @@ class ControllerAgent(GenericAgent):
         )
         return ans_dict["action"], agent_info
   
-
-        
-

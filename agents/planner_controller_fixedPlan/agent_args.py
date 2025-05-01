@@ -7,7 +7,7 @@ from agents.planner_controller_fixedPlan.agents import PlannerAgent, ControllerA
 from browsergym.experiments.agent import Agent 
 
 if TYPE_CHECKING:
-    from agentlab.llm.chat_api import BaseModelArgs
+    from agentlab.llm.base_api import BaseModelArgs
 
 @dataclass
 class MultiAgentArgs:
@@ -17,14 +17,20 @@ class MultiAgentArgs:
 
 
 class PlannerAgentArg(MostBasicAgentArgs):
-    agent_name: str = "PlannerAgent"
-    temperature: float = 0
+    agent_name: str = "PlannerAgentCPFixed"
+    def __init__(self, chat_model_args,strategy="strategy_1", prompt_opt= 0, temperature= 0):
+        super().__init__(chat_model_args=chat_model_args)
+        self.strategy = strategy
+        self.prompt_opt = prompt_opt
+        self.temperature = temperature
 
     def make_agent(self) -> Agent:
         return PlannerAgent(
             temperature=self.temperature,
             use_chain_of_thought=self.use_chain_of_thought,
             chat_model_args=self.chat_model_args,
+            strategy=self.strategy,
+            prompt_opt=self.prompt_opt,
         )
 
 class ControllerAgentArgs(GenericAgentArgs):
@@ -33,7 +39,7 @@ class ControllerAgentArgs(GenericAgentArgs):
         #self.temperature= 0.1
     
     def __post_init__(self):
-        self.agent_type = "CPFixed" # change to PlannerController, CPO, etc.
+        self.agent_type = "ControllerCPFixed" # change to PlannerController, CPO, etc.
         try:  # some attributes might be temporarily args.CrossProd for hyperparameter generation
             self.agent_name = f"{self.agent_type}-{self.chat_model_args.model_name}".replace("/", "_")
         except AttributeError:

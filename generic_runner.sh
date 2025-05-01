@@ -54,6 +54,6 @@ echo MULTIAGENT-DONE
 
 python3 main.py --config generic --n_jobs 2
 
-python3 main.py --config generic --n_jobs 2 --relaunch True --contains generic-on-webarena-test_generic 
+python3 main.py --config generic --n_jobs 4 --relaunch True --contains 2025-04-22_18-26-12_generic-on-webarena-train_generic
 
 
