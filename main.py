@@ -52,7 +52,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     # benchmark = "workarena.l2"
     # benchmark = "workarena.l3"
     #benchmark = "webarena"
-    benchmark = get_mini_webarena_benchmark()
+    benchmark = get_train_webarena_benchmark()
 
 
     # Set reproducibility_mode = True for reproducibility
@@ -69,6 +69,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     # n_jobs = -1  # to use all available cores
     multi_agent_args = None
     single_agent_args = None
+    
 
     if config == 'generic':
         single_agent_args = AGENT_4o_MINI
@@ -78,6 +79,8 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
         else:
             single_agent_args.chat_model_args.temperature = 0.4
     else:
+        if suffix is None:
+            suffix = strategy
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
         observer_args = ObserverAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args)

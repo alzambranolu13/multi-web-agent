@@ -113,10 +113,11 @@ def get_train_webarena_benchmark():
         is_multi_tab=True,
         supports_parallel_seeds=False,
         backends=["webarena"],
-        env_args_list=make_env_args_list_from_fixed_seeds(
+        env_args_list=make_env_args_list_from_repeat_tasks(
             task_list=[f"webarena.{task_id}" for task_id in TASK_IDS_TRAIN],
             max_steps=30,
-            fixed_seeds=[0],
+            n_repeats=5,
+            seeds_rng=np.random.RandomState(42),
         ),
         task_metadata=task_metadata("webarena"),
     )
