@@ -24,12 +24,12 @@ class MultiAgentExpArgsCPfixed(MultiAgentExpArgsBase):
         return self.controller   
 
 
-    def _multi_agent_step(self, step_info: StepInfo, steps_completed,steps_failed):  
+    def _multi_agent_step(self, step_info: StepInfo):  
 
         logger.debug(f"Starting step {step_info.step}.")
 
         step_info.profiling.agent_start = time.time()
-        planner_ans_dict = self.planner.get_action(step_info.obs.copy(),steps_completed,steps_failed)
+        planner_ans_dict = self.planner.get_action(step_info.obs.copy())
         plan = planner_ans_dict['steps']
 
         with open(self.exp_dir/f"planner_answer_step_{step_info.step}.json", "w") as f:
@@ -69,7 +69,7 @@ class MultiAgentExpArgsCPfixed(MultiAgentExpArgsBase):
             logger.debug(f"Environment reset.")
             steps_completed= []
             steps_failed=[]
-            plan = self._multi_agent_step(step_info,steps_completed,steps_failed)
+            plan = self._multi_agent_step(step_info)
             agent.set_plan(plan)
 
             while not step_info.is_done: 

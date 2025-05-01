@@ -44,7 +44,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 
 
-def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
+def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strategy="strategy_1", prompt_opt=0):
     ## select the benchmark to run on
     #benchmark = "miniwob_tiny_test"
     # benchmark = "miniwob"
@@ -77,7 +77,6 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
             single_agent_args.set_reproducibility_mode()
         else:
             single_agent_args.chat_model_args.temperature = 0.4
-            #single_agent_args.set_reproducibility_mode()
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
@@ -85,7 +84,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None):
         if config == 'CP' :
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPFixed':
-            planner_args = FixedPlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
+            planner_args = FixedPlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0)
             controller_args = FixedControllerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
@@ -117,7 +116,7 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--config",
             type=str,
-            default="CP",
+            default="CPFixed",
             help="""Python path to the agent config. Defaults to : "Planner-Controller configuration.""",
         )
     parser.add_argument(
@@ -152,10 +151,23 @@ if __name__ == "__main__":  # necessary for dask backend
             default=None,
             help="""Keyword to find exp dir if relaunch is set to true. Defaults to empty""",
         )
+    parser.add_argument(
+            "--strategy",
+            type=str,
+            default="strategy_1",
+            help="""Keyword to set the strategy for the planner agent. Defaults to strategy_1""",
+        )
+    parser.add_argument(
+            "--prompt_opt",
+            type=int,
+            default=0,
+            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+        )
+
 
     args, unknown = parser.parse_known_args()
     if args.contains !=  None:
         if args.contains == True:
             raise Exception('Value contains is set to not None but relaunch is false')
     
-    run_experiment(config=args.config, n_jobs=args.n_jobs,suffix=args.suffix,relaunch=args.relaunch, contains=args.contains, reproduce=args.reproduce )
+    run_experiment(config=args.config, n_jobs=args.n_jobs,suffix=args.suffix,relaunch=args.relaunch, contains=args.contains, reproduce=args.reproduce, strategy=args.strategy, prompt_opt=args.prompt_opt)

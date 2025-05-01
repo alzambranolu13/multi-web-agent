@@ -19,9 +19,11 @@ if TYPE_CHECKING:
 
 
 class PlannerAgent(MostBasicAgent):
-    def __init__(self, temperature: float, use_chain_of_thought: bool, use_failed_steps: bool, chat_model_args: "BaseModelArgs"):
+    def __init__(self, temperature: float, use_chain_of_thought: bool, chat_model_args: "BaseModelArgs", strategy: str = "strategy_1", prompt_opt: int = 0):
         super().__init__(temperature, use_chain_of_thought, chat_model_args)
-        self.use_failed_steps= use_failed_steps
+        self.strategy = strategy
+        self.prompt_opt = prompt_opt
+
 
     def add_screenshot(self, prompt, screenshot):
         if isinstance(prompt, str):
@@ -36,9 +38,9 @@ class PlannerAgent(MostBasicAgent):
         )
         return prompt
 
-    def get_action(self, obs: dict, last_steps: list, steps_failed: list) -> tuple[str, dict]:
+    def get_action(self, obs: dict) -> tuple[str, dict]:
 
-        main_prompt= PlannerPrompt('webarena', obs['goal'], self.use_failed_steps, last_steps, steps_failed)
+        main_prompt= PlannerPrompt(obs['goal'], self.strategy, self.prompt_opt)
         system_prompt, prompt = main_prompt.system_prompt, main_prompt.prompt
         prompt = self.add_screenshot(prompt, obs['screenshot'])
 
