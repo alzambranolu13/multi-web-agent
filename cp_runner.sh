@@ -4,7 +4,7 @@
 #SBATCH --time=05:00:00
 module load python/3.10 cuda/11.8
 
-export AGENTLAB_EXP_ROOT="/home/mila/a/alejandra.zambrano/scratch/new_scratch"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results"
 export AGENTXRAY_SHARE_GRADIO="true"
 export OPENAI_API_KEY="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"
 
