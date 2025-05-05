@@ -12,7 +12,7 @@ from agentlab.agents.agent_args import AgentArgs
 
 from agents import MultiAgentArgs
 from experiments.Study import MyStudy
-from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_train_webarena_benchmark, get_test_webarena_benchmark
+from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_train_webarena_benchmark, get_test_webarena_benchmark, get_valid_webarena_benchmark
 from agentlab.agents.generic_agent import (
     AGENT_LLAMA3_70B,
     AGENT_LLAMA31_70B,
@@ -52,7 +52,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     # benchmark = "workarena.l2"
     # benchmark = "workarena.l3"
     #benchmark = "webarena"
-    benchmark = get_train_webarena_benchmark()
+    benchmark = get_valid_webarena_benchmark()
 
 
     # Set reproducibility_mode = True for reproducibility
@@ -94,15 +94,20 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
         #set reproductibility for multi-agent
         if reproducibility_mode:
-            multi_agent_args.controller_args.set_reproducibility_mode()
-            multi_agent_args.planner_args.set_reproducibility_mode()
+            #multi_agent_args.controller_args.set_reproducibility_mode()
+            #multi_agent_args.planner_args.set_reproducibility_mode()
+            pass
+        else:
+            multi_agent_args.controller_args.chat_model_args.temperature = 0.4
+            multi_agent_args.planner_args.chat_model_args.temperature = 0.4
+            #multi_agent_args.observer_args.chat_model_args.temperature = 0.4
             
     if relaunch:
         #  relaunch an existing study
         study = MyStudy.load_most_recent(contains=contains)
         study.find_incomplete(include_errors=True)   
     else: 
-        study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG)
+        study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG, ignore_dependencies=True)
 
     study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=False, n_relaunch=3)
 

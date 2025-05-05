@@ -18,7 +18,7 @@ export WA_WIKIPEDIA="$BASE_URL:8888/wikipedia_en_all_maxi_2022-05/A/User:The_oth
 export WA_MAP="$BASE_URL:3000"
 export WA_HOMEPAGE="$BASE_URL:4399"
 
-SUFFIX="az-1"
+SUFFIX="az-0"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 
 echo MULTIAGENT-DONE
 
-python3 main.py --config CP --n_jobs 4 --reproduce
+python3 main.py --config CPFixed --n_jobs 4 --reproduce
 
 
 python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2025-01-04_12-40-19_cp-on-webarena-100_CP
