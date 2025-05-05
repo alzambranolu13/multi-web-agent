@@ -10,7 +10,7 @@ from .agent_args import ControllerAgentArgs,PlannerAgentArg
 def get_cp_planner_args(generic_agent_args):
     return PlannerAgentArg(chat_model_args=generic_agent_args.chat_model_args)
 
-PLAN_AGENT_CP = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"], strategy="strategy_1", prompt_opt=1, temperature= 0)
+PLAN_AGENT_CP = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"], strategy="strategy_1", prompt_opt=1, temperature= 0.4)
 
 FLAGS_GPT_4o = GenericPromptFlags(
     obs=dp.ObsFlags(

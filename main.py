@@ -87,19 +87,17 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
         if config == 'CP' :
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPFixed':
-            planner_args = FixedPlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0)
+            planner_args = FixedPlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.4)
             controller_args = FixedControllerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
         #set reproductibility for multi-agent
         if reproducibility_mode:
-            #multi_agent_args.controller_args.set_reproducibility_mode()
-            #multi_agent_args.planner_args.set_reproducibility_mode()
-            pass
-        else:
-            multi_agent_args.controller_args.chat_model_args.temperature = 0.4
-            multi_agent_args.planner_args.chat_model_args.temperature = 0.4
+            multi_agent_args.controller_args.set_reproducibility_mode()
+
+        #multi_agent_args.controller_args.chat_model_args.temperature = 0.4
+        #multi_agent_args.planner_args.chat_model_args.temperature = 0.4
             #multi_agent_args.observer_args.chat_model_args.temperature = 0.4
             
     if relaunch:
