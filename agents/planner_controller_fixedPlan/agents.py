@@ -1,6 +1,7 @@
 import re
 from typing import TYPE_CHECKING
 from dataclasses import asdict
+import bgym
 
 from agentlab.agents.most_basic_agent.most_basic_agent import MostBasicAgent
 from agentlab.agents import dynamic_prompting as dp
@@ -11,7 +12,7 @@ from browsergym.experiments.agent import AgentInfo
 
 from .prompts.dynamic_prompts import MyMainPrompt
 from .prompts.prompts import PlannerPrompt
-
+from llm.tracking import cost_tracker_decorator
 
 if TYPE_CHECKING:
     from agentlab.llm.chat_api import BaseModelArgs
@@ -38,6 +39,7 @@ class PlannerAgent(MostBasicAgent):
         )
         return prompt
 
+    @cost_tracker_decorator
     def get_action(self, obs: dict) -> tuple[str, dict]:
 
         main_prompt= PlannerPrompt(obs['goal'], self.strategy, self.prompt_opt)
@@ -56,8 +58,16 @@ class PlannerAgent(MostBasicAgent):
             return answer
 
         ans_dict = retry(self.chat, messages, n_retry=4, parser=parser)
+        agent_info = bgym.AgentInfo(
+                think= ans_dict.get('thought',None),
+                chat_messages=messages,
+                # put any stats that you care about as long as it is a number or a dict of numbers
+                stats={"prompt_length": len(messages), "response_length": ans_dict.get('thought','')},
+                markdown_page="Add any txt information here, including base 64 images, to display in xray",
+                extra_info={"chat_model_args": asdict(self.chat_model_args)},
+            )
 
-        return ans_dict
+        return ans_dict,agent_info
     
 
 class ControllerAgent(GenericAgent):
@@ -68,6 +78,7 @@ class ControllerAgent(GenericAgent):
     def set_plan(self,plan):
         self.plan= plan
  
+    @cost_tracker_decorator
     def get_action(self,obs): 
         self.obs_history.append(obs)
         main_prompt = MyMainPrompt(
