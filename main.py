@@ -107,7 +107,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     else: 
         study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG, ignore_dependencies=True)
 
-    study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=False, n_relaunch=3)
+    study.run(n_jobs=n_jobs, parallel_backend="ray", strict_reproducibility=False, n_relaunch=3)
 
     # if reproducibility_mode:
     #     study.append_to_journal(strict_reproducibility=True)
