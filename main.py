@@ -80,7 +80,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
             single_agent_args.chat_model_args.temperature = 0.4
     else:
         if suffix is None:
-            suffix = strategy
+            suffix = f"{strategy}_v{prompt_opt}"
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
         observer_args = ObserverAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args)
