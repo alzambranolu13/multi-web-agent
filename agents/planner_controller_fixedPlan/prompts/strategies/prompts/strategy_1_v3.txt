@@ -19,6 +19,8 @@ Important considerations when generating your plan:
 3. Do not include verification steps—i.e., steps that merely confirm or validate the outcome of other subtasks.
 4. Do not include optional or speculative steps. Your plan should be minimal and purpose-driven.
 5. If you're unsure whether a step is necessary, leave it out.
+6. Make clear what information is necessary for the executor to return to the user. i.e. Do not include steps like "review", "determine" or "identify"
+7. Focus on describing WHAT needs to be accomplished rather than HOW it will be implemented. Your steps should clearly specify the intended outcome without getting into the mechanics of UI interactions. The executor agent will handle translating these high-level but precise steps into the necessary.
 
 Example:
 

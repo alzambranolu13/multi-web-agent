@@ -49,7 +49,11 @@ FLAGS_GPT_4o = GenericPromptFlags(
     enable_chat=False,
     max_prompt_tokens=40_000,
     be_cautious=True,
-    extra_instructions= None 
+    extra_instructions= """
+It's a priority to follow the Global Plan. 
+In your thought process add a section specifically explaining how the plan is being followed  
+and how you actions assoicate.
+"""
 )
 
 

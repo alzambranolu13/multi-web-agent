@@ -32,6 +32,7 @@ TASK_IDS_MINI: List[int] = get_task_ids_sampled_wa(task_file='webarena.mini_ids.
 TASK_IDS_TRAIN: List[int] = get_task_ids_sampled_wa(task_file='webarena.train_ids.json')
 TASK_IDS_TEST: List[int] = get_task_ids_sampled_wa(task_file='webarena.test_ids.json')
 TASK_VALID_TEST: List[int] = get_task_ids_sampled_wa(task_file='val_split.json')
+TASK_VALID_TEST = [118]
 #TASK_IDS_MINI = [126]
 
 
@@ -149,7 +150,7 @@ def get_valid_webarena_benchmark():
         backends=["webarena"],
         env_args_list=make_env_args_list_from_repeat_tasks(
             task_list=[f"webarena.{task_id}" for task_id in TASK_VALID_TEST],
-            max_steps=20,
+            max_steps=30,
             n_repeats=3,
             seeds_rng=np.random.RandomState(42),
         ),

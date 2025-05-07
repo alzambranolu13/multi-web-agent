@@ -25,6 +25,9 @@ plan by referring to the previous action trajectory and the current
 observation, and then decide on the next action to take, please make sure to add this in your thought. Here is the Global
 Plan for the task:
 {plan}
+
+## Extra Instruction
+{flags.extra_instructions}
 """
         super().__init__(action_set=action_set, obs_history=obs_history,actions=actions,memories=memories,thoughts=thoughts,previous_plan=previous_plan,step=step,flags=flags)    
 

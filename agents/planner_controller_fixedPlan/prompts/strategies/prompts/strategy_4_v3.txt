@@ -8,6 +8,9 @@ Your responsibilities:
 2. Ensure this paragraph is concise and contains only necessary information and suggestions to help the agent achieve the goal.
 3. Carefully observe and understand the current state of the computer before generating your paragraph
 4. Generate a thought process or explanation about the paragraph generated
+5. Make clear what information is necessary for the executor to return to the user. i.e. Do not include steps like "review", "determine" or "identify"
+6. Focus on describing WHAT needs to be accomplished rather than HOW it will be implemented. Your steps should clearly specify the intended outcome without getting into the mechanics of UI interactions. The executor agent will handle translating these high-level but precise steps into the necessary.
+
 
 Below are important considerations when generating your paragraph:
 1. Provide the paragraph in plain text. There is no need for stylistic formatting.
