@@ -16,4 +16,4 @@ export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
 
 
-python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set valid
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set valid --ignore_dependencies

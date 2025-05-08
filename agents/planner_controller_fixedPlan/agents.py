@@ -10,7 +10,7 @@ from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_ur
 from agentlab.llm.chat_api import make_system_message, make_user_message
 from browsergym.experiments.agent import AgentInfo
 
-from .prompts.dynamic_prompts import MyMainPrompt
+from .prompts.dynamic_prompts import MyMainPrompt, ControllerSystemPrompt
 from .prompts.prompts import PlannerPrompt
 from llm.tracking import cost_tracker_decorator
 
@@ -95,7 +95,7 @@ class ControllerAgent(GenericAgent):
 
         max_prompt_tokens, max_trunc_itr = self._get_maxes()
 
-        system_prompt = SystemMessage(dp.SystemPrompt().prompt)
+        system_prompt = SystemMessage(ControllerSystemPrompt().prompt)
 
         human_prompt = dp.fit_tokens(
             shrinkable=main_prompt,

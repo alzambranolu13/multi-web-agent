@@ -34,7 +34,6 @@ TASK_IDS_TEST: List[int] = get_task_ids_sampled_wa(task_file='webarena.test_ids.
 TASK_VALID_TEST: List[int] = get_task_ids_sampled_wa(task_file='val_split.json')
 
 
-
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):
         print("Preparing backends for WebArenaBenchmarkWithoutReset")

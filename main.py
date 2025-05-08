@@ -93,7 +93,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
         if config == 'CP' :
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPFixed':
-            planner_args = FixedPlannerAgentArg(chat_model_args=model_backend.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.4)
+            planner_args = FixedPlannerAgentArg(chat_model_args=model_backend.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.6)
             controller_args = FixedControllerAgentArg(chat_model_args=model_backend.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
@@ -113,7 +113,7 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     else: 
         study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG, ignore_dependencies=ignore_dependencies)
 
-    study.run(n_jobs=n_jobs, parallel_backend="ray", strict_reproducibility=False, n_relaunch=3)
+    study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=False, n_relaunch=3)
 
     # if reproducibility_mode:
     #     study.append_to_journal(strict_reproducibility=True)
@@ -128,7 +128,7 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--config",
             type=str,
-            default="generic",
+            default="CPFixed",
             help="""Python path to the agent config. Defaults to : "Planner-Controller configuration.""",
         )
     parser.add_argument(
