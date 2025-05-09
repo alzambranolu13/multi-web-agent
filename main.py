@@ -32,7 +32,7 @@ from agents.cont_plan_obs.agent_args import (
 from agents.planner_controller_fixedPlan.agent_args import PlannerAgentArg as FixedPlannerAgentArg
 from agents.planner_controller_fixedPlan.agent_args import ControllerAgentArgs as FixedControllerAgentArg
 from agents.planner_controller_fixedPlan import  FLAGS_GPT_4o as FLAGS_GPT_4o_FIXED
-from utils.models import AGENT_41_M
+from utils.models import AGENT_41_MINI, AGENT_41
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
 logging.getLogger().setLevel(logging.DEBUG)
@@ -58,7 +58,9 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     if model_backend == '4o-mini':
         model_backend = AGENT_4o_MINI
     elif model_backend == '41-m':
-        model_backend = AGENT_41_M
+        model_backend = AGENT_41_MINI
+    elif model_backend == '41':
+        model_backend = AGENT_41
 
 
     # Set reproducibility_mode = True for reproducibility

@@ -13,9 +13,9 @@ export WA_WIKIPEDIA="https://wa-wikipedia-${SUFFIX}.mcgill-nlp.org/wikipedia_en_
 export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
-python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test
-python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test
-python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test
-python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test
-python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test
+python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test --suffix _4o-mini
+python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test --suffix _4o-mini
+python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test --suffix _4o-mini
+python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test --suffix _4o-mini
+python3 main.py --config generic --n_jobs 4 --backend 4o-mini --run_set test --suffix _4o-mini
 
