@@ -1,9 +1,8 @@
 cd ..
-source venv/bin/activate
 export OPENAI_API_KEY="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"
 
-
-SUFFIX="az-2"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/hardset_generation/"
+SUFFIX="az-5"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
@@ -14,6 +13,5 @@ export WA_WIKIPEDIA="https://wa-wikipedia-${SUFFIX}.mcgill-nlp.org/wikipedia_en_
 export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
-
-
-python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set valid --ignore_dependencies
+python3 main.py --config generic --n_jobs 4 --backend qwen  --run_set test
+python3 main.py --config generic --n_jobs 4 --backend qwen --run_set test
