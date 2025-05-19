@@ -13,7 +13,7 @@ export WA_WIKIPEDIA="https://wa-wikipedia-${SUFFIX}.mcgill-nlp.org/wikipedia_en_
 export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
-python3 main.py --config generic --n_jobs 4 --backend 41-m --run_set test
-python3 main.py --config generic --n_jobs 4 --backend 41-m --run_set test
-python3 main.py --config generic --n_jobs 4 --backend 41-m --run_set test
+python3 main.py --config generic --n_jobs 4 --backend 41-m --run_set test --relaunch --contains 2025-05-10_02-48-41_generic-on-webarena-test_generic_4.1-mini
+python3 main.py --config generic --n_jobs 4 --backend 41-m --run_set test --relaunch --contains 2025-05-10_07-05-23_generic-on-webarena-test_generic_4.1-mini 
+
 

@@ -12,7 +12,7 @@ from agentlab.agents.agent_args import AgentArgs
 
 from agents import MultiAgentArgs
 from experiments.Study import MyStudy
-from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_train_webarena_benchmark, get_test_webarena_benchmark, get_valid_webarena_benchmark
+from experiments.Benchmark import get_webarena_benchmark, get_mini_webarena_benchmark, get_train_webarena_benchmark, get_test_webarena_benchmark, get_valid_webarena_benchmark, get_hard_webarena_benchmark, get_medium_webarena_benchmark, get_easy_webarena_benchmark
 from agentlab.agents.generic_agent import (
     AGENT_4o_MINI,
 )
@@ -54,10 +54,16 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
         benchmark = get_test_webarena_benchmark()
     elif run_set == "valid":
         benchmark = get_valid_webarena_benchmark()
+    elif run_set == "hard":
+        benchmark = get_hard_webarena_benchmark()
+    elif run_set == "medium":
+        benchmark = get_medium_webarena_benchmark()
+    elif run_set == "easy":
+        benchmark = get_easy_webarena_benchmark()
 
     if model_backend == '4o-mini':
         model_backend = AGENT_4o_MINI
-    elif model_backend == '41-m':
+    elif model_backend == '41-mini':
         model_backend = AGENT_41_MINI
     elif model_backend == '41':
         model_backend = AGENT_41

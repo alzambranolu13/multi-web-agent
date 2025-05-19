@@ -4,8 +4,8 @@ export OPENAI_API_KEY="sk-proj-8Lt5snAGdwqblEeOWlZ8s0ckSs6VQ1nHptutv5yLKX9fAGt2N
 export VLLM_API_KEY="vllm-mg5sPKx4W5NqF"
 export VLLM_BASE_URL="https://vllm.mcgill-nlp.org/v1"
 
-export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/hardset_generation/"
-SUFFIX="az-3"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/strategies-qwen/"
+SUFFIX="az-4"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
@@ -16,8 +16,10 @@ export WA_WIKIPEDIA="https://wa-wikipedia-${SUFFIX}.mcgill-nlp.org/wikipedia_en_
 export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
-python3 main.py --config generic --n_jobs 4 --backend qwen  --run_set test --relaunch --contains 2025-05-14_00-13-57_generic-on-webarena-test_generic 
-python3 main.py --config generic --n_jobs 4 --backend qwen --run_set test
 
 
-
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_3 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-05-16_12-07-06_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_3_v3
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_3 --prompt_opt 3 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_3 --prompt_opt 3 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_3 --prompt_opt 3 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_3 --prompt_opt 3 --backend qwen --run_set hard 

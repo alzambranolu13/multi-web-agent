@@ -2,7 +2,7 @@ cd ..
 export OPENAI_API_KEY="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"
 
 export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/hardset_generation/"
-SUFFIX="az-3"
+SUFFIX="az-5"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"

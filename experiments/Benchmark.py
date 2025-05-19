@@ -32,6 +32,9 @@ TASK_IDS_MINI: List[int] = get_task_ids_sampled_wa(task_file='webarena.mini_ids.
 TASK_IDS_TRAIN: List[int] = get_task_ids_sampled_wa(task_file='webarena.train_ids.json')
 TASK_IDS_TEST: List[int] = get_task_ids_sampled_wa(task_file='webarena.test_ids.json')
 TASK_VALID_TEST: List[int] = get_task_ids_sampled_wa(task_file='val_split.json')
+TASK_HARD : List[int] = get_task_ids_sampled_wa(task_file='hard_tasks.json')
+TASK_MEDIUM : List[int] = get_task_ids_sampled_wa(task_file='medium_tasks.json')
+TASK_EASY : List[int] = get_task_ids_sampled_wa(task_file='easy_tasks.json')
 
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
@@ -151,6 +154,54 @@ def get_valid_webarena_benchmark():
             max_steps=30,
             n_repeats=3,
             seeds_rng=np.random.RandomState(42),
+        ),
+        task_metadata=task_metadata("webarena"),
+    )
+
+def get_hard_webarena_benchmark():
+    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    return Benchmark(
+        name="webarena_test",
+        high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
+        is_multi_tab=True,
+        supports_parallel_seeds=False,
+        backends=["webarena"],
+        env_args_list=make_env_args_list_from_fixed_seeds(
+            task_list=[f"webarena.{task_id}" for task_id in TASK_HARD],
+            max_steps=30,
+            fixed_seeds=[0],
+        ),
+        task_metadata=task_metadata("webarena"),
+    )
+
+def get_medium_webarena_benchmark():
+    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    return Benchmark(
+        name="webarena_test",
+        high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
+        is_multi_tab=True,
+        supports_parallel_seeds=False,
+        backends=["webarena"],
+        env_args_list=make_env_args_list_from_fixed_seeds(
+            task_list=[f"webarena.{task_id}" for task_id in TASK_MEDIUM],
+            max_steps=30,
+            fixed_seeds=[0],
+        ),
+        task_metadata=task_metadata("webarena"),
+    )
+
+def get_easy_webarena_benchmark():
+    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    return Benchmark(
+        name="webarena_test",
+        high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
+        is_multi_tab=True,
+        supports_parallel_seeds=False,
+        backends=["webarena"],
+        env_args_list=make_env_args_list_from_fixed_seeds(
+            task_list=[f"webarena.{task_id}" for task_id in TASK_EASY],
+            max_steps=30,
+            fixed_seeds=[0],
         ),
         task_metadata=task_metadata("webarena"),
     )

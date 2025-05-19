@@ -32,7 +32,12 @@ class MyStudy(Study):
         
     @property
     def name(self):
-        agent_names = [self.config]
+        
+        if self.config == 'CP' or self.config == 'CPFixed':
+            agent_name = self.multi_agent_args.controller_args.agent_name
+        else:
+            agent_name = self.agent_args.agent_name
+        agent_names = [self.config+"_" + agent_name]
         if len(agent_names) == 1:
             study_name = f"{agent_names[0]}_on_{self.benchmark.name}"
         else:
