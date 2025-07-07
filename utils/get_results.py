@@ -12,23 +12,24 @@ RESULTS_DIR = os.environ.get("AGENTLAB_EXP_ROOT", None)
 RESULTS_DIR=Path(RESULTS_DIR)
 print(RESULTS_DIR)
 
-
-experiments = glob.glob(str(RESULTS_DIR)+"/*")
-print("Found experiments:",(experiments))
-dfs= []
-for a in experiments:
-    print("Experiment:", a)
-    study_name = a.split("/")[-1]
-    if study_name.endswith(".zip") or study_name.endswith("archive"):
-        print("Skipping archive:", study_name)
-        continue
-    print("Study Name:",study_name)
-    result_dir= get_most_recent_study(RESULTS_DIR, contains=study_name)
-    result_df = inspect_results.load_result_df(result_dir)
-    if result_df is None:
-        print("No result found for study:", study_name)
-        continue
-    dfs.append(result_df)
+def get_experiments_dfs(RESULTS_DIR):
+    experiments = glob.glob(str(RESULTS_DIR)+"/*")
+    print("Found experiments:",(experiments))
+    dfs= []
+    for a in experiments:
+        print("Experiment:", a)
+        study_name = a.split("/")[-1]
+        if study_name.endswith(".zip") or study_name.endswith("archive"):
+            print("Skipping archive:", study_name)
+            continue
+        print("Study Name:",study_name)
+        result_dir= get_most_recent_study(RESULTS_DIR, contains=study_name)
+        result_df = inspect_results.load_result_df(result_dir)
+        if result_df is None:
+            print("No result found for study:", study_name)
+            continue
+        dfs.append(result_df)
+    return dfs
 
 
 def prepare_df(df, i):
@@ -44,7 +45,7 @@ def prepare_df(df, i):
     return df
 
 
-
+dfs= get_experiments_dfs(RESULTS_DIR)
 # Process each dataframe
 prepared = [prepare_df(df,i) for i,df in enumerate(dfs)]
 

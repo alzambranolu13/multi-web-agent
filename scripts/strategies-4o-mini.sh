@@ -16,24 +16,20 @@ export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
 
 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard --relaunch --contains 2025-05-16_11-37-08_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_1_v3
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard  --relaunch --contains 2025-05-17_02-11-46_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_1_v3
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard 
-
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard --relaunch --contains 2025-05-17_10-11-55_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_3_v3
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
-
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard 
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard --relaunch --contains 2025-05-18_00-59-43_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_4_v3
-
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard 
-
-#python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard --relaunch --contains 2025-05-16_11-37-08_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_1_v3
 python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard  --relaunch --contains 2025-05-17_02-11-46_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_1_v3
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard --relaunch --contains 2025-05-17_10-11-55_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_3_v3
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard --relaunch --contains 2025-05-18_00-59-43_cpfixed-controllercpfixed-gpt-4o-mini-2024-07-18-on-webarena-test_strategy_4_v3
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_3 --prompt_opt 3 --backend 4o-mini --run_set hard 
+python3 main.py --config CPFixed --n_jobs 6 --reproduce --strategy strategy_4 --prompt_opt 3 --backend 4o-mini --run_set hard   
 
 

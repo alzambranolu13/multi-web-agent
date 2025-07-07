@@ -1,20 +1,63 @@
 import os
+import bgym
 from dataclasses import dataclass
 
 
 from agentlab.llm.chat_api import (
     OpenAIModelArgs,
 )
-from agentlab.agents.generic_agent.generic_agent import GenericAgentArgs
+from agentlab.agents.generic_agent.generic_agent import GenericAgentArgs, GenericPromptFlags
+from agentlab.agents import dynamic_prompting as dp
+
 from agentlab.agents.generic_agent.agent_configs import FLAGS_GPT_4o
 from agentlab.llm.base_api import BaseModelArgs
 from agentlab.llm.chat_api import OpenAIModelArgs, ChatModel
 import agentlab.llm.tracking as tracking
 from openai import OpenAI
 
+FLAGS_GPT_4o_plan = GenericPromptFlags(
+    obs=dp.ObsFlags(
+        use_html=False,
+        use_ax_tree=True,
+        use_focused_element=True,
+        use_error_logs=True,
+        use_history=True,
+        use_past_error_logs=False,
+        use_action_history=True,
+        use_think_history=False,
+        use_diff=False,
+        html_type="pruned_html",
+        use_screenshot=False,
+        use_som=False,
+        extract_visible_tag=True,
+        extract_clickable_tag=True,
+        extract_coords="False",
+        filter_visible_elements_only=False,
+    ),
+    action=dp.ActionFlags(
+        action_set=bgym.HighLevelActionSetArgs(
+            subsets=["bid"],
+            multiaction=False,
+        ),
+        long_description=False,
+        individual_examples=False,
+    ),
+    use_plan=True,
+    use_criticise=False,
+    use_thinking=True,
+    use_memory=False,
+    use_concrete_example=True,
+    use_abstract_example=True,
+    use_hints=True,
+    enable_chat=False,
+    max_prompt_tokens=40_000,
+    be_cautious=True,
+    extra_instructions=None,
+)
 
 chat_model_41_mini=  OpenAIModelArgs(model_name="gpt-4.1-mini",max_total_tokens=128_000,max_input_tokens=128_000,max_new_tokens=16_384,vision_support=True)
 AGENT_41_MINI = GenericAgentArgs(chat_model_args=chat_model_41_mini,flags=FLAGS_GPT_4o)
+AGENT_41_PLAN = GenericAgentArgs(chat_model_args=chat_model_41_mini,flags=FLAGS_GPT_4o_plan)
 chat_model_41=  OpenAIModelArgs(model_name="gpt-4.1-2025-04-14",max_total_tokens=128_000,max_input_tokens=128_000,max_new_tokens=16_384,vision_support=True)
 AGENT_41 = GenericAgentArgs(chat_model_args=chat_model_41,flags=FLAGS_GPT_4o)
 
@@ -172,41 +215,6 @@ def prepare_vllm_model(
     return agent_args
 
 
-def prepare_vllm_model(
-    model_name="meta-llama/Llama-3.3-70B-Instruct",
-    max_new_tokens=1024,
-    max_prompt_tokens=16384 - 4096,
-    max_total_tokens=16384,
-    use_vision=False,
-    enable_chat=False,
-    base_url=None,
-    api_key=None,
-):
-    # the base url and api key are set in VllmModelArgs's make_model,
-    # so it is not necessary to set them here, but it is possible if needed
-    model_args = VllmModelArgs(
-        model_name=model_name,
-        max_total_tokens=max_total_tokens,
-        max_input_tokens=max_total_tokens - max_new_tokens,
-        max_new_tokens=max_new_tokens,
-        vision_support=use_vision,
-    )
-    if base_url is not None:
-        model_args.set_base_url(base_url)
-    if api_key is not None:
-        model_args.set_api_key(api_key)
-
-    agent_args = GenericAgentArgs(
-        chat_model_args=model_args,
-        flags=get_default_flags(
-            max_prompt_tokens=max_prompt_tokens,
-            use_som=use_vision,
-            use_screenshot=use_vision,
-            enable_chat=enable_chat,
-        ),
-    )
-
-    return agent_args
 
 
-AGENT_QWEN_25 = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",)
+AGENT_QWEN_25 = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",use_vision=True)

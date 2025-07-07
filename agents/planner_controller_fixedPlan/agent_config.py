@@ -47,7 +47,7 @@ FLAGS_GPT_4o = GenericPromptFlags(
     use_abstract_example=True,
     use_hints=True,
     enable_chat=False,
-    max_prompt_tokens=40_000,
+    max_prompt_tokens=12_288,
     be_cautious=True,
     extra_instructions= """
 It's a priority to follow the Global Plan. 

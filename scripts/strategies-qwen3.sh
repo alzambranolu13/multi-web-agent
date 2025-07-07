@@ -4,8 +4,8 @@ export OPENAI_API_KEY="sk-proj-8Lt5snAGdwqblEeOWlZ8s0ckSs6VQ1nHptutv5yLKX9fAGt2N
 export VLLM_API_KEY="vllm-mg5sPKx4W5NqF"
 export VLLM_BASE_URL="https://vllm.mcgill-nlp.org/v1"
 
-export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/strategies-qwen/"
-SUFFIX="az-5"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/strategies-qwen/strategy_4"
+SUFFIX="az-2"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
@@ -17,8 +17,8 @@ export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
 
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains   2025-05-16_12-15-16_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3  
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains   2025-05-17_02-53-31_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains   2025-05-17_11-44-08_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3 
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains   2025-05-17_22-48-27_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-15_21-25-44_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-17_13-36-13_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-18_18-40-53_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-19_19-11-46_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
+python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_4 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-20_17-25-07_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_4_v3
