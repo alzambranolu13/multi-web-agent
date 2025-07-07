@@ -36,7 +36,6 @@ TASK_HARD : List[int] = get_task_ids_sampled_wa(task_file='hard_tasks.json')
 TASK_MEDIUM : List[int] = get_task_ids_sampled_wa(task_file='medium_tasks.json')
 TASK_EASY : List[int] = get_task_ids_sampled_wa(task_file='easy_tasks.json')
 
-
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):
         print("Preparing backends for WebArenaBenchmarkWithoutReset")
@@ -161,7 +160,7 @@ def get_valid_webarena_benchmark():
 def get_hard_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
     return Benchmark(
-        name="webarena_test",
+        name="webarena_hard",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
         supports_parallel_seeds=False,
@@ -177,7 +176,7 @@ def get_hard_webarena_benchmark():
 def get_medium_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
     return Benchmark(
-        name="webarena_test",
+        name="webarena_medium",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
         supports_parallel_seeds=False,
@@ -193,7 +192,7 @@ def get_medium_webarena_benchmark():
 def get_easy_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
     return Benchmark(
-        name="webarena_test",
+        name="webarena_easy",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
         supports_parallel_seeds=False,
