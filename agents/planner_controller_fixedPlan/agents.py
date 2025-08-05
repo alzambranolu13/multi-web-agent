@@ -6,7 +6,7 @@ import bgym
 from agentlab.agents.most_basic_agent.most_basic_agent import MostBasicAgent
 from agentlab.agents import dynamic_prompting as dp
 from agentlab.agents.generic_agent.generic_agent import GenericAgent
-from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,SystemMessage, retry, Discussion
+from agentlab.llm.llm_utils import parse_html_tags_raise, image_to_jpg_base64_url, ParseError,SystemMessage, retry, Discussion, upload_to_freeimage_host
 from agentlab.llm.chat_api import make_system_message, make_user_message
 from browsergym.experiments.agent import AgentInfo
 
@@ -30,7 +30,8 @@ class PlannerAgent(MostBasicAgent):
         if isinstance(prompt, str):
             prompt = [{"type": "text", "text": prompt}]
 
-        img_url = image_to_jpg_base64_url(screenshot)
+        #img_url = image_to_jpg_base64_url(screenshot)
+        img_url = upload_to_freeimage_host(screenshot)
         prompt.append(
             {
                 "type": "image_url",

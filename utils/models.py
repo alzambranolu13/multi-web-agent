@@ -217,4 +217,4 @@ def prepare_vllm_model(
 
 
 
-AGENT_QWEN_25 = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",use_vision=True)
+AGENT_QWEN_25 = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",use_vision=True, max_new_tokens= 256, max_total_tokens = 16384, max_prompt_tokens=16384 -300 )

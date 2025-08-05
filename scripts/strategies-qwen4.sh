@@ -4,8 +4,8 @@ export OPENAI_API_KEY="sk-proj-8Lt5snAGdwqblEeOWlZ8s0ckSs6VQ1nHptutv5yLKX9fAGt2N
 export VLLM_API_KEY="vllm-mg5sPKx4W5NqF"
 export VLLM_BASE_URL="https://vllm.mcgill-nlp.org/v1"
 
-export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/strategies-qwen/strategy_3/"
-SUFFIX="az-2"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/strategies-qwen/strategy_4"
+SUFFIX="az-3"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
@@ -17,9 +17,8 @@ export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
 
-
-python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_3 --prompt_opt 5 --backend qwen --run_set hard 
-python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_3 --prompt_opt 5 --backend qwen --run_set hard 
-python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_3 --prompt_opt 5 --backend qwen --run_set hard 
-python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_3 --prompt_opt 5 --backend qwen --run_set hard 
-python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_3 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_4 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_4 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_4 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_4 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_4 --prompt_opt 5 --backend qwen --run_set hard 

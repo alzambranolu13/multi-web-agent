@@ -17,10 +17,8 @@ export WA_MAP="https://wa-openstreetmap-${SUFFIX}.mcgill-nlp.org"
 export WA_FULL_RESET="https://wa-reset-${SUFFIX}.mcgill-nlp.org"
 
 
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_1 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-10_12-32-42_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_1_v3
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_1 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-10_12-45-08_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_1_v3
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_1 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-11_13-17-20_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_1_v3
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_1 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-12_20-47-34_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_1_v3
-python3 main.py --config CPFixed --n_jobs 2 --reproduce --strategy strategy_1 --prompt_opt 3 --backend qwen --run_set hard --relaunch --contains 2025-06-16_11-33-48_cpfixed-controllercpfixed-qwen-qwen2-5-vl-72b-instruct-on-webarena-test_strategy_1_v3
-
-
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_1 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_1 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_1 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_1 --prompt_opt 5 --backend qwen --run_set hard 
+python3 main.py --config CPFixed --n_jobs 1 --reproduce --strategy strategy_1 --prompt_opt 5 --backend qwen --run_set hard 

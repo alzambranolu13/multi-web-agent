@@ -16,8 +16,6 @@ from browsergym.experiments.benchmark.configs import DEFAULT_HIGHLEVEL_ACTION_SE
 from typing import List
 
 
-#TASK_IDS= [157,44,156]
-#TASK_IDS= [718]
 
 def get_task_ids_sampled_wa(package='data', task_file='webarena.task_ids.mini.json') -> List[int]:
     task_ids_path = os.path.join(package,task_file)
@@ -35,6 +33,7 @@ TASK_VALID_TEST: List[int] = get_task_ids_sampled_wa(task_file='val_split.json')
 TASK_HARD : List[int] = get_task_ids_sampled_wa(task_file='hard_tasks.json')
 TASK_MEDIUM : List[int] = get_task_ids_sampled_wa(task_file='medium_tasks.json')
 TASK_EASY : List[int] = get_task_ids_sampled_wa(task_file='easy_tasks.json')
+TASK_IDS_TEST = [157]
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):

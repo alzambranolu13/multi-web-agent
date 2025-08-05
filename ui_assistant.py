@@ -18,6 +18,9 @@ from agents.planner_controller import (
     FLAGS_GPT_4o
 )
 
+from utils.models import AGENT_41_MINI, AGENT_41, AGENT_QWEN_25, AGENT_41_PLAN
+
+
 from agents.planner_controller.agent_args import (
     PlannerAgentArg,
     ControllerAgentArgs
@@ -103,7 +106,7 @@ def main():
     single_agent_args = None
     multi_agent_args = None
     if config == 'generic':
-        single_agent_args = AGENT_4o_MINI
+        single_agent_args = AGENT_QWEN_25
     else:
         planner_args = PlannerAgentArg(chat_model_args=AGENT_4o_MINI.chat_model_args)
         controller_args = ControllerAgentArgs(chat_model_args=AGENT_4o_MINI.chat_model_args, flags= FLAGS_GPT_4o)
