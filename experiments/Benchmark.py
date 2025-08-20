@@ -124,7 +124,7 @@ def get_train_webarena_benchmark():
 
 def get_test_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return Benchmark(
+    return WebArenaBenchmarkWithoutReset(
         name="webarena_test",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,

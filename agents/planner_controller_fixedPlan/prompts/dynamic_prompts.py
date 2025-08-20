@@ -17,7 +17,7 @@ from agentlab.agents import dynamic_prompting as dp
      
 class MyMainPrompt(MainPrompt):
       def __init__(self, action_set: AbstractActionSet, obs_history: list[dict], actions: list[str], memories: list[str], thoughts: list[str], previous_plan: str, step: int, flags: GenericPromptFlags, plan: str):
-        flags.extra_instructions = f"""    
+        extra_instructions = f"""    
 ## Global Plan
 The Global Plan is a structured, step-by-step plan that provides you with a
 roadmap to complete the web task. Each step in the Global Plan contains a 
@@ -34,7 +34,7 @@ Plan for the task:
         super().__init__(action_set=action_set, obs_history=obs_history,actions=actions,memories=memories,thoughts=thoughts,previous_plan=previous_plan,step=step,flags=flags)    
         self.think = ControllerThink(visible=lambda: flags.use_thinking)
         self.instructions = ControllerChatInstructions(
-            obs_history[-1]["chat_messages"], extra_instructions=flags.extra_instructions)
+            obs_history[-1]["chat_messages"], extra_instructions=extra_instructions)
 
 
 
