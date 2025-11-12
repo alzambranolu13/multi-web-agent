@@ -187,6 +187,7 @@ def prepare_vllm_model(
     enable_chat=False,
     base_url=None,
     api_key=None,
+    flags=None,
 ):
     # the base url and api key are set in VllmModelArgs's make_model,
     # so it is not necessary to set them here, but it is possible if needed
@@ -204,12 +205,7 @@ def prepare_vllm_model(
 
     agent_args = GenericAgentArgs(
         chat_model_args=model_args,
-        flags=get_default_flags(
-            max_prompt_tokens=max_prompt_tokens,
-            use_som=use_vision,
-            use_screenshot=use_vision,
-            enable_chat=enable_chat,
-        ),
+        flags=flags,
     )
 
     return agent_args
@@ -217,4 +213,6 @@ def prepare_vllm_model(
 
 
 
-AGENT_QWEN_25 = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",use_vision=True, max_new_tokens= 256, max_total_tokens = 16384, max_prompt_tokens=16384 -300 )
+
+AGENT_QWEN_25 = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",use_vision=True, max_new_tokens= 256, max_total_tokens = 16384, max_prompt_tokens=16384 -300 , flags= FLAGS_GPT_4o)
+AGENT_QWEN_25_PLAN = prepare_vllm_model(model_name="Qwen/Qwen2.5-VL-72B-Instruct",use_vision=True, max_new_tokens= 256, max_total_tokens = 16384, max_prompt_tokens=16384 -300 , flags= FLAGS_GPT_4o_plan)
