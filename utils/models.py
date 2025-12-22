@@ -11,9 +11,11 @@ from agentlab.agents import dynamic_prompting as dp
 
 from agentlab.agents.generic_agent.agent_configs import FLAGS_GPT_4o
 from agentlab.llm.base_api import BaseModelArgs
-from agentlab.llm.chat_api import OpenAIModelArgs, ChatModel
+from agentlab.llm.chat_api import OpenAIModelArgs, ChatModel,OpenRouterModelArgs
 import agentlab.llm.tracking as tracking
 from openai import OpenAI
+
+
 
 FLAGS_GPT_4o_plan = GenericPromptFlags(
     obs=dp.ObsFlags(
@@ -60,6 +62,22 @@ AGENT_41_MINI = GenericAgentArgs(chat_model_args=chat_model_41_mini,flags=FLAGS_
 AGENT_41_PLAN = GenericAgentArgs(chat_model_args=chat_model_41_mini,flags=FLAGS_GPT_4o_plan)
 chat_model_41=  OpenAIModelArgs(model_name="gpt-4.1-2025-04-14",max_total_tokens=128_000,max_input_tokens=128_000,max_new_tokens=16_384,vision_support=True)
 AGENT_41 = GenericAgentArgs(chat_model_args=chat_model_41,flags=FLAGS_GPT_4o)
+
+
+gemini_openrouter = OpenRouterModelArgs(
+        model_name="google/gemini-2.5-flash",
+        max_total_tokens=200_000,
+        max_input_tokens=200_000,
+        max_new_tokens=8_192,
+        temperature=1e-1,
+        vision_support=True,
+    )
+
+AGENT_GEMINI_25FLASH = GenericAgentArgs(
+    chat_model_args= gemini_openrouter,
+    flags=FLAGS_GPT_4o,
+)
+
 
 class OpenAICompatibleChatModel(ChatModel):
     def __init__(

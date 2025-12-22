@@ -32,7 +32,7 @@ from agents.cont_plan_obs.agent_args import (
 from agents.planner_controller_fixedPlan.agent_args import PlannerAgentArg as FixedPlannerAgentArg
 from agents.planner_controller_fixedPlan.agent_args import ControllerAgentArgs as FixedControllerAgentArg
 from agents.planner_controller_fixedPlan import  FLAGS_GPT_4o as FLAGS_GPT_4o_FIXED
-from utils.models import AGENT_41_MINI, AGENT_41, AGENT_QWEN_25, AGENT_41_PLAN, AGENT_QWEN_25_PLAN
+from utils.models import AGENT_41_MINI, AGENT_41, AGENT_QWEN_25, AGENT_41_PLAN, AGENT_QWEN_25_PLAN, AGENT_GEMINI_25FLASH
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
 logging.getLogger().setLevel(logging.DEBUG)
@@ -71,8 +71,11 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
         model_backend = AGENT_41
     elif model_backend == 'qwen':
         model_backend = AGENT_QWEN_25
+    elif model_backend == 'gemini':
+        model_backend = AGENT_GEMINI_25FLASH
     elif model_backend == 'qwen-plan':
         model_backend = AGENT_QWEN_25_PLAN
+    
 
     # Set reproducibility_mode = True for reproducibility
     # this will "ask" agents to be deterministic. Also, it will prevent you from launching if you have
@@ -100,14 +103,14 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     else:
         if suffix is None:
             suffix = f"{strategy}_v{prompt_opt}"
-        planner_args = PlannerAgentArg(chat_model_args=AGENT_QWEN_25.chat_model_args)
-        controller_args = ControllerAgentArgs(chat_model_args=AGENT_41_MINI.chat_model_args, flags= FLAGS_GPT_4o)
+        planner_args = PlannerAgentArg(chat_model_args=model_backend.chat_model_args)
+        controller_args = ControllerAgentArgs(chat_model_args=model_backend.chat_model_args, flags= FLAGS_GPT_4o)
         observer_args = ObserverAgentArgs(chat_model_args=model_backend.chat_model_args)
         if config == 'CP' :
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPFixed':
-            planner_args = FixedPlannerAgentArg(chat_model_args=AGENT_QWEN_25.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.6)
-            controller_args = FixedControllerAgentArg(chat_model_args=AGENT_41_MINI.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
+            planner_args = FixedPlannerAgentArg(chat_model_args=model_backend.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.6)
+            controller_args = FixedControllerAgentArg(chat_model_args=model_backend.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )

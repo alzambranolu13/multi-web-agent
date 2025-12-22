@@ -33,7 +33,7 @@ TASK_VALID_TEST: List[int] = get_task_ids_sampled_wa(task_file='val_split.json')
 TASK_HARD : List[int] = get_task_ids_sampled_wa(task_file='hard_tasks.json')
 TASK_MEDIUM : List[int] = get_task_ids_sampled_wa(task_file='medium_tasks.json')
 TASK_EASY : List[int] = get_task_ids_sampled_wa(task_file='easy_tasks.json')
-TASK_IDS_TEST = [157]
+#TASK_IDS_TEST = [157]
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
     def prepare_backends(self):
@@ -124,7 +124,7 @@ def get_train_webarena_benchmark():
 
 def get_test_webarena_benchmark():
     # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
-    return WebArenaBenchmarkWithoutReset(
+    return Benchmark(
         name="webarena_test",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
         is_multi_tab=True,
