@@ -78,6 +78,11 @@ AGENT_GEMINI_25FLASH = GenericAgentArgs(
     flags=FLAGS_GPT_4o,
 )
 
+AGENT_GEMINI_25FLASH_PLAN = GenericAgentArgs(
+    chat_model_args= gemini_openrouter,
+    flags=FLAGS_GPT_4o_plan,
+)
+
 
 class OpenAICompatibleChatModel(ChatModel):
     def __init__(

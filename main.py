@@ -32,14 +32,41 @@ from agents.cont_plan_obs.agent_args import (
 from agents.planner_controller_fixedPlan.agent_args import PlannerAgentArg as FixedPlannerAgentArg
 from agents.planner_controller_fixedPlan.agent_args import ControllerAgentArgs as FixedControllerAgentArg
 from agents.planner_controller_fixedPlan import  FLAGS_GPT_4o as FLAGS_GPT_4o_FIXED
-from utils.models import AGENT_41_MINI, AGENT_41, AGENT_QWEN_25, AGENT_41_PLAN, AGENT_QWEN_25_PLAN, AGENT_GEMINI_25FLASH
+from utils.models import AGENT_41_MINI, AGENT_41, AGENT_QWEN_25, AGENT_41_PLAN, AGENT_QWEN_25_PLAN, AGENT_GEMINI_25FLASH, AGENT_GEMINI_25FLASH_PLAN
 #import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
 logging.getLogger().setLevel(logging.DEBUG)
 
 
+def select_model(model_name):
 
-def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strategy="strategy_1", prompt_opt=0, run_set="test", model_backend='4o-mini', ignore_dependencies=False):
+    if model_name is None:
+        return None
+
+    model_backend = None
+    if model_name == '4o-mini':
+        model_backend = AGENT_4o_MINI
+    elif model_name == '41-mini':
+        model_backend = AGENT_41_MINI
+    elif model_name == '41-mini-plan':
+        model_backend = AGENT_41_PLAN
+    elif model_name == '41':
+        model_backend = AGENT_41
+    elif model_name == 'qwen':
+        model_backend = AGENT_QWEN_25
+    elif model_name == 'gemini':
+        model_backend = AGENT_GEMINI_25FLASH
+    elif model_name == 'gemini-plan':
+        model_backend = AGENT_GEMINI_25FLASH_PLAN
+    elif model_name == 'qwen-plan':
+        model_backend = AGENT_QWEN_25_PLAN
+
+    if model_backend is None:
+        raise ValueError(f"Model {model_name} not recognized.")
+    
+    return model_backend
+
+def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strategy="strategy_1", prompt_opt=0, run_set="test", model_backend='4o-mini', model_planner= '4o-mini', model_controller='4o-mini', ignore_dependencies=False):
     ## select the benchmark to run on
     # benchmark = "miniwob_tiny_test"
     # benchmark = "miniwob"
@@ -61,21 +88,9 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     elif run_set == "easy":
         benchmark = get_easy_webarena_benchmark()
 
-    if model_backend == '4o-mini':
-        model_backend = AGENT_4o_MINI
-    elif model_backend == '41-mini':
-        model_backend = AGENT_41_MINI
-    elif model_backend == '41-mini-plan':
-        model_backend = AGENT_41_PLAN
-    elif model_backend == '41':
-        model_backend = AGENT_41
-    elif model_backend == 'qwen':
-        model_backend = AGENT_QWEN_25
-    elif model_backend == 'gemini':
-        model_backend = AGENT_GEMINI_25FLASH
-    elif model_backend == 'qwen-plan':
-        model_backend = AGENT_QWEN_25_PLAN
-    
+    model_backend = select_model(model_backend)
+    model_planner = select_model(model_planner)
+    model_controller = select_model(model_controller)
 
     # Set reproducibility_mode = True for reproducibility
     # this will "ask" agents to be deterministic. Also, it will prevent you from launching if you have
@@ -103,14 +118,14 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     else:
         if suffix is None:
             suffix = f"{strategy}_v{prompt_opt}"
-        planner_args = PlannerAgentArg(chat_model_args=model_backend.chat_model_args)
-        controller_args = ControllerAgentArgs(chat_model_args=model_backend.chat_model_args, flags= FLAGS_GPT_4o)
-        observer_args = ObserverAgentArgs(chat_model_args=model_backend.chat_model_args)
+        planner_args = PlannerAgentArg(chat_model_args=model_planner.chat_model_args)
+        controller_args = ControllerAgentArgs(chat_model_args=model_controller.chat_model_args, flags= FLAGS_GPT_4o)
+        observer_args = ObserverAgentArgs(chat_model_args=model_controller.chat_model_args)
         if config == 'CP' :
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPFixed':
-            planner_args = FixedPlannerAgentArg(chat_model_args=model_backend.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.6)
-            controller_args = FixedControllerAgentArg(chat_model_args=model_backend.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
+            planner_args = FixedPlannerAgentArg(chat_model_args=model_planner.chat_model_args ,strategy=strategy, prompt_opt=prompt_opt, temperature= 0.6)
+            controller_args = FixedControllerAgentArg(chat_model_args=model_controller.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
@@ -207,9 +222,22 @@ if __name__ == "__main__":  # necessary for dask backend
     parser.add_argument(
             "--backend",
             type=str,
-            default="41-m",
+            default= None,
             help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
         )
+    parser.add_argument(
+            "--planner",
+            type=str,
+            default='41-mini',
+            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+        )
+    parser.add_argument(
+            "--controller",
+            type=str,
+            default='41-mini',
+            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+        )
+    
  
 
     args, unknown = parser.parse_known_args()
@@ -217,4 +245,4 @@ if __name__ == "__main__":  # necessary for dask backend
         if args.contains == True:
             raise Exception('Value contains is set to not None but relaunch is false')
     
-    run_experiment(config=args.config, n_jobs=args.n_jobs,suffix=args.suffix,relaunch=args.relaunch, contains=args.contains, reproduce=args.reproduce, strategy=args.strategy, prompt_opt=args.prompt_opt, run_set=args.run_set, model_backend=args.backend, ignore_dependencies=args.ignore_dependencies)
+    run_experiment(config=args.config, n_jobs=args.n_jobs,suffix=args.suffix,relaunch=args.relaunch, contains=args.contains, reproduce=args.reproduce, strategy=args.strategy, prompt_opt=args.prompt_opt, run_set=args.run_set, model_backend=args.backend, model_planner = args.planner, model_controller = args.controller, ignore_dependencies=args.ignore_dependencies)
