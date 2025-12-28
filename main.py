@@ -1,8 +1,10 @@
 """
-Note: This script is a convenience script to launch experiments instead of using
-the command line.
+Main entry point for running multi-agent web automation experiments.
 
-Don't push your changes to this file to git unless you are making structural changes.
+This script provides a command-line interface to launch experiments with various
+agent configurations on WebArena benchmarks. It supports single-agent and multi-agent
+configurations including Planner-Controller (CP), Planner-Controller-Fixed (CPFixed),
+and Planner-Controller-Observer (CPO) setups.
 """
 
 import logging
@@ -33,13 +35,23 @@ from agents.planner_controller_fixedPlan.agent_args import PlannerAgentArg as Fi
 from agents.planner_controller_fixedPlan.agent_args import ControllerAgentArgs as FixedControllerAgentArg
 from agents.planner_controller_fixedPlan import  FLAGS_GPT_4o as FLAGS_GPT_4o_FIXED
 from utils.models import AGENT_41_MINI, AGENT_41, AGENT_QWEN_25, AGENT_41_PLAN, AGENT_QWEN_25_PLAN, AGENT_GEMINI_25FLASH, AGENT_GEMINI_25FLASH_PLAN
-#import nltk; nltk.download('punkt');nltk.download('punkt_tab')
 
 logging.getLogger().setLevel(logging.DEBUG)
 
 
 def select_model(model_name):
-
+    """
+    Select a model backend based on the model name string.
+    
+    Args:
+        model_name: String identifier for the model (e.g., '4o-mini', '41-mini', etc.)
+        
+    Returns:
+        Model backend configuration object
+        
+    Raises:
+        ValueError: If the model name is not recognized
+    """
     if model_name is None:
         return None
 
@@ -66,14 +78,28 @@ def select_model(model_name):
     
     return model_backend
 
-def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strategy="strategy_1", prompt_opt=0, run_set="test", model_backend='4o-mini', model_planner= '4o-mini', model_controller='4o-mini', ignore_dependencies=False):
-    ## select the benchmark to run on
-    # benchmark = "miniwob_tiny_test"
-    # benchmark = "miniwob"
-    # benchmark = "workarena.l1"
-    # benchmark = "workarena.l2"
-    # benchmark = "workarena.l3"
-    # benchmark = "webarena"
+def run_experiment(config, n_jobs, suffix, relaunch, reproduce, contains=None, strategy="strategy_1", 
+                   prompt_opt=0, run_set="test", model_backend='4o-mini', model_planner='4o-mini', 
+                   model_controller='4o-mini', ignore_dependencies=False):
+    """
+    Run an experiment with the specified configuration.
+    
+    Args:
+        config: Agent configuration type ('generic', 'CP', 'CPFixed', or 'CPO')
+        n_jobs: Number of parallel jobs to run
+        suffix: Suffix for experiment name
+        relaunch: Whether to relaunch an existing study
+        reproduce: Whether to enable reproducibility mode
+        contains: Keyword to find experiment directory if relaunch is True
+        strategy: Strategy identifier for the planner agent
+        prompt_opt: Prompt option index for the planner agent
+        run_set: Dataset split to run on ('train', 'test', 'valid', 'hard', 'medium', 'easy')
+        model_backend: Model backend for single-agent or generic config
+        model_planner: Model backend for planner agent
+        model_controller: Model backend for controller agent
+        ignore_dependencies: Whether to ignore task dependencies
+    """
+    
     benchmark = None
     if run_set == "train":
         benchmark = get_train_webarena_benchmark()
@@ -92,18 +118,8 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
     model_planner = select_model(model_planner)
     model_controller = select_model(model_controller)
 
-    # Set reproducibility_mode = True for reproducibility
-    # this will "ask" agents to be deterministic. Also, it will prevent you from launching if you have
-    # local changes. For your custom agents you need to implement set_reproducibility_mode
-    reproducibility_mode = reproduce 
-
-    # Set relaunch = True to relaunch an existing study, this will continue incomplete
-    # experiments and relaunch errored experiments
+    reproducibility_mode = reproduce
     relaunch = relaunch
-
-    ## Number of parallel jobs
-    #n_jobs = 4  # Make sure to use 1 job when debugging in VSCode
-    # n_jobs = -1  # to use all available cores
     multi_agent_args = None
     single_agent_args = None
     
@@ -128,39 +144,38 @@ def run_experiment(config,n_jobs,suffix,relaunch,reproduce, contains=None, strat
             controller_args = FixedControllerAgentArg(chat_model_args=model_controller.chat_model_args, flags= FLAGS_GPT_4o_FIXED)
             multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= None )
         if config == 'CPO':
-            multi_agent_args = MultiAgentArgs(planner_args= planner_args, controller_args= controller_args, observer_args= observer_args )
-        #set reproductibility for multi-agent
+            multi_agent_args = MultiAgentArgs(planner_args=planner_args, controller_args=controller_args, observer_args=observer_args)
+        
         if reproducibility_mode:
             multi_agent_args.controller_args.set_reproducibility_mode()
-
-        #multi_agent_args.controller_args.chat_model_args.temperature = 0.4
-        #multi_agent_args.planner_args.chat_model_args.temperature = 0.4
-            #multi_agent_args.observer_args.chat_model_args.temperature = 0.4
             
     if relaunch:
-        #  relaunch an existing study
         study = MyStudy.load_most_recent(contains=contains)
         study.find_incomplete(include_errors=True)   
     else: 
-        study =  MyStudy(config=config,multi_agent_args=multi_agent_args, single_agent_args= single_agent_args, suffix= suffix,benchmark=benchmark,logging_level_stdout= logging.DEBUG, ignore_dependencies=ignore_dependencies)
+        study = MyStudy(
+            config=config,
+            multi_agent_args=multi_agent_args,
+            single_agent_args=single_agent_args,
+            suffix=suffix,
+            benchmark=benchmark,
+            logging_level_stdout=logging.DEBUG,
+            ignore_dependencies=ignore_dependencies
+        )
 
     study.run(n_jobs=n_jobs, parallel_backend="joblib", strict_reproducibility=False, n_relaunch=3)
 
-    # if reproducibility_mode:
-    #     study.append_to_journal(strict_reproducibility=True)
 
-
-if __name__ == "__main__":  # necessary for dask backend
-
-    #TODO MAKE FUNCTION FOR REPRODUCTABILITY
-
-    parser = argparse.ArgumentParser()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Run multi-agent web automation experiments on WebArena benchmarks"
+    )
 
     parser.add_argument(
             "--config",
             type=str,
             default="CPFixed",
-            help="""Python path to the agent config. Defaults to : "Planner-Controller configuration.""",
+            help="Agent configuration type: 'generic', 'CP', 'CPFixed', or 'CPO'. Defaults to 'CPFixed'.",
         )
     parser.add_argument(
             "--n_jobs",
@@ -178,28 +193,28 @@ if __name__ == "__main__":  # necessary for dask backend
             "--reproduce",
             type=bool,
             default=False,
-            help="""Bool for reproducibility mode. Defaults to : False""",
+            help="Enable reproducibility mode (makes agents deterministic). Defaults to False.",
             action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--relaunch",
             type=bool,
             default=False,
-            help="""Bool value for relaunch". Defaults to false""",
+            help="Relaunch an existing study (continues incomplete experiments). Defaults to False.",
             action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--ignore_dependencies",
             type=bool,
             default=False,
-            help="""Bool value for relaunch". Defaults to false""",
+            help="Ignore task dependencies in the benchmark. Defaults to False.",
             action=argparse.BooleanOptionalAction
         )
     parser.add_argument(
             "--contains",
             type=str,
             default=None,
-            help="""Keyword to find exp dir if relaunch is set to true. Defaults to empty""",
+            help="Keyword to find experiment directory if relaunch is set to True. Defaults to None.",
         )
     parser.add_argument(
             "--strategy",
@@ -211,38 +226,51 @@ if __name__ == "__main__":  # necessary for dask backend
             "--prompt_opt",
             type=int,
             default=0,
-            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+            help="Prompt option index for the planner agent. Defaults to 0.",
         )
     parser.add_argument(
             "--run_set",
             type=str,
             default="test",
-            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+            help="Dataset split to run on: 'train', 'test', 'valid', 'hard', 'medium', or 'easy'. Defaults to 'test'.",
         )
     parser.add_argument(
             "--backend",
             type=str,
-            default= None,
-            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+            default=None,
+            help="Model backend for single-agent or generic config (e.g., '4o-mini', '41-mini'). Defaults to None.",
         )
     parser.add_argument(
             "--planner",
             type=str,
             default='41-mini',
-            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+            help="Model backend for planner agent (e.g., '4o-mini', '41-mini'). Defaults to '41-mini'.",
         )
     parser.add_argument(
             "--controller",
             type=str,
             default='41-mini',
-            help="""Keyword to set the prompt from list of prompts for the planner agent. Defaults to 0""",
+            help="Model backend for controller agent (e.g., '4o-mini', '41-mini'). Defaults to '41-mini'.",
         )
     
  
 
     args, unknown = parser.parse_known_args()
-    if args.contains !=  None:
-        if args.contains == True:
-            raise Exception('Value contains is set to not None but relaunch is false')
+    if args.contains is not None and not args.relaunch:
+        raise ValueError('The --contains argument requires --relaunch to be True.')
     
-    run_experiment(config=args.config, n_jobs=args.n_jobs,suffix=args.suffix,relaunch=args.relaunch, contains=args.contains, reproduce=args.reproduce, strategy=args.strategy, prompt_opt=args.prompt_opt, run_set=args.run_set, model_backend=args.backend, model_planner = args.planner, model_controller = args.controller, ignore_dependencies=args.ignore_dependencies)
+    run_experiment(
+        config=args.config,
+        n_jobs=args.n_jobs,
+        suffix=args.suffix,
+        relaunch=args.relaunch,
+        contains=args.contains,
+        reproduce=args.reproduce,
+        strategy=args.strategy,
+        prompt_opt=args.prompt_opt,
+        run_set=args.run_set,
+        model_backend=args.backend,
+        model_planner=args.planner,
+        model_controller=args.controller,
+        ignore_dependencies=args.ignore_dependencies
+    )

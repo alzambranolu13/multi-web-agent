@@ -30,12 +30,13 @@ TASK_IDS_MINI: List[int] = get_task_ids_sampled_wa(task_file='webarena.mini_ids.
 TASK_IDS_TRAIN: List[int] = get_task_ids_sampled_wa(task_file='webarena.train_ids.json')
 TASK_IDS_TEST: List[int] = get_task_ids_sampled_wa(task_file='webarena.test_ids.json')
 TASK_VALID_TEST: List[int] = get_task_ids_sampled_wa(task_file='val_split.json')
-TASK_HARD : List[int] = get_task_ids_sampled_wa(task_file='hard_tasks.json')
-TASK_MEDIUM : List[int] = get_task_ids_sampled_wa(task_file='medium_tasks.json')
-TASK_EASY : List[int] = get_task_ids_sampled_wa(task_file='easy_tasks.json')
-#TASK_IDS_TEST = [157]
+TASK_HARD: List[int] = get_task_ids_sampled_wa(task_file='hard_tasks.json')
+TASK_MEDIUM: List[int] = get_task_ids_sampled_wa(task_file='medium_tasks.json')
+TASK_EASY: List[int] = get_task_ids_sampled_wa(task_file='easy_tasks.json')
 
 class WebArenaBenchmarkWithoutReset(Benchmark):
+    """Benchmark class for WebArena that does not perform full instance resets."""
+    
     def prepare_backends(self):
         print("Preparing backends for WebArenaBenchmarkWithoutReset")
         for backend in self.backends:
@@ -73,7 +74,12 @@ class WebArenaBenchmarkWithoutReset(Benchmark):
         )
                 
 def get_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the full WebArena benchmark.
+    
+    Returns:
+        Benchmark instance with all WebArena tasks
+    """
     return Benchmark(
         name="webarena",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -90,7 +96,12 @@ def get_webarena_benchmark():
     )
 
 def get_mini_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get a mini WebArena benchmark with a subset of tasks (no full reset).
+    
+    Returns:
+        WebArenaBenchmarkWithoutReset instance with a subset of WebArena tasks
+    """
     return WebArenaBenchmarkWithoutReset(
         name="webarena_100",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -107,7 +118,12 @@ def get_mini_webarena_benchmark():
     )
 
 def get_train_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the WebArena training set benchmark.
+    
+    Returns:
+        Benchmark instance with training set tasks
+    """
     return Benchmark(
         name="webarena_train",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -123,7 +139,12 @@ def get_train_webarena_benchmark():
     )
 
 def get_test_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the WebArena test set benchmark.
+    
+    Returns:
+        Benchmark instance with test set tasks
+    """
     return Benchmark(
         name="webarena_test",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -140,7 +161,12 @@ def get_test_webarena_benchmark():
 
 
 def get_valid_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the WebArena validation set benchmark.
+    
+    Returns:
+        Benchmark instance with validation set tasks
+    """
     return Benchmark(
         name="webarena",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -157,7 +183,12 @@ def get_valid_webarena_benchmark():
     )
 
 def get_hard_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the WebArena hard difficulty benchmark.
+    
+    Returns:
+        Benchmark instance with hard difficulty tasks
+    """
     return Benchmark(
         name="webarena_hard",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -173,7 +204,12 @@ def get_hard_webarena_benchmark():
     )
 
 def get_medium_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the WebArena medium difficulty benchmark.
+    
+    Returns:
+        Benchmark instance with medium difficulty tasks
+    """
     return Benchmark(
         name="webarena_medium",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],
@@ -189,7 +225,12 @@ def get_medium_webarena_benchmark():
     )
 
 def get_easy_webarena_benchmark():
-    # TODO: Might want to switch back to `Backend` when WA_FULL_RESET issue is resolved
+    """
+    Get the WebArena easy difficulty benchmark.
+    
+    Returns:
+        Benchmark instance with easy difficulty tasks
+    """
     return Benchmark(
         name="webarena_easy",
         high_level_action_set_args=DEFAULT_HIGHLEVEL_ACTION_SET_ARGS["webarena"],

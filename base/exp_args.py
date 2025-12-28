@@ -90,9 +90,6 @@ class MultiAgentExpArgsBase(loop.ExpArgs):
                 while num_substep< max_substep_steps:
                     if step_info.is_done:
                         break
-                    # if num_newplan_refusal>=max_newplan_refusal:
-                    #     pass
-                    #     #TODO FORCE NOOP TO NOT BE POSSIBLE 
                     agent.set_goal(goal)
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
