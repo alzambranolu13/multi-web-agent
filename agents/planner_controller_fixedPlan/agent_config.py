@@ -10,7 +10,7 @@ from .agent_args import ControllerAgentArgs,PlannerAgentArg
 def get_cp_planner_args(generic_agent_args):
     return PlannerAgentArg(chat_model_args=generic_agent_args.chat_model_args)
 
-PLAN_AGENT_CP = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"], strategy="strategy_1", prompt_opt=1, temperature= 0)
+PLAN_AGENT_CP = PlannerAgentArg(chat_model_args=CHAT_MODEL_ARGS_DICT["openai/gpt-4o-mini-2024-07-18"], strategy="strategy_1", prompt_opt=1, temperature= 0.4)
 
 FLAGS_GPT_4o = GenericPromptFlags(
     obs=dp.ObsFlags(
@@ -47,9 +47,13 @@ FLAGS_GPT_4o = GenericPromptFlags(
     use_abstract_example=True,
     use_hints=True,
     enable_chat=False,
-    max_prompt_tokens=40_000,
+    max_prompt_tokens=12_288,
     be_cautious=True,
-    extra_instructions= None 
+    extra_instructions= """ 
+It's a priority to follow the Global Plan. 
+In your thought process, explicitly reflect on how the plan is being followed by your actions and the current step.
+
+"""
 )
 
 

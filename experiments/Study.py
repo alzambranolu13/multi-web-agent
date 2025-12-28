@@ -23,16 +23,21 @@ from agents import MultiAgentArgs
 
 
 class MyStudy(Study):
-    def __init__(self, config , multi_agent_args, single_agent_args, suffix, benchmark, logging_level= logging.DEBUG, logging_level_stdout=logging.WARNING):
+    def __init__(self, config , multi_agent_args, single_agent_args, suffix, benchmark, logging_level= logging.DEBUG, logging_level_stdout=logging.WARNING, ignore_dependencies=False):
         self.config = config
         self.multi_agent_args = multi_agent_args
         if suffix == None:
             suffix= config
-        super().__init__(agent_args= single_agent_args, benchmark=benchmark, suffix= suffix , logging_level= logging_level, logging_level_stdout=logging_level_stdout)
+        super().__init__(agent_args= single_agent_args, benchmark=benchmark, suffix= suffix , logging_level= logging_level, logging_level_stdout=logging_level_stdout, ignore_dependencies=ignore_dependencies)
         
     @property
     def name(self):
-        agent_names = [self.config]
+        
+        if self.config == 'CP' or self.config == 'CPFixed':
+            agent_name = self.multi_agent_args.controller_args.agent_name
+        else:
+            agent_name = self.agent_args.agent_name
+        agent_names = [self.config+"_" + agent_name]
         if len(agent_names) == 1:
             study_name = f"{agent_names[0]}_on_{self.benchmark.name}"
         else:

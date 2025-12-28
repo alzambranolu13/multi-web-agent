@@ -4,21 +4,16 @@
 #SBATCH --time=05:00:00
 module load python/3.10 cuda/11.8
 
-export AGENTLAB_EXP_ROOT="/home/mila/a/alejandra.zambrano/scratch/new_scratch"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/4o-mini-hardset"
+export AGENTLAB_EXP_ROOT="/home/nlp/users/azambrano/agentlab_results/hardset_generation"
 export AGENTXRAY_SHARE_GRADIO="true"
 export OPENAI_API_KEY="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"
+export VLLM_API_KEY="vllm-mg5sPKx4W5NqF"
+export VLLM_BASE_URL="https://vllm.mcgill-nlp.org/v1"
 
-export BASE_URL="http://ec2-18-232-29-212.compute-1.amazonaws.com"
 
-export WA_SHOPPING="$BASE_URL:7770/"
-export WA_SHOPPING_ADMIN="$BASE_URL:7780/admin"
-export WA_REDDIT="$BASE_URL:9999"
-export WA_GITLAB="$BASE_URL:8023"
-export WA_WIKIPEDIA="$BASE_URL:8888/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing"
-export WA_MAP="$BASE_URL:3000"
-export WA_HOMEPAGE="$BASE_URL:4399"
 
-SUFFIX="az-0"
+SUFFIX="az-5"
 
 export WA_HOMEPAGE="https://wa-homepage-${SUFFIX}.mcgill-nlp.org"
 export WA_SHOPPING="https://wa-shopping-${SUFFIX}.mcgill-nlp.org/"
@@ -48,7 +43,7 @@ pip install -r requirements.txt
 
 echo MULTIAGENT-DONE
 
-python3 main.py --config CP --n_jobs 4 --reproduce
+python3 main.py --config CPFixed --n_jobs 4 --reproduce --strategy strategy_1 --prompt_opt 1
 
 
 python3 main.py --config CP --n_jobs 4 --relaunch True --contains 2025-01-04_12-40-19_cp-on-webarena-100_CP

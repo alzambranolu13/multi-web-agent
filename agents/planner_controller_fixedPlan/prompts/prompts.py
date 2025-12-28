@@ -15,7 +15,7 @@ class PlannerPrompt():
 
 
         self.prompt= f"""
-Create a plan to achieve the goal: {goal}.
+You need to generate a plan for solving the following task: {goal}.
 """ 
 
 
